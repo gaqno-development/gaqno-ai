@@ -2,7 +2,7 @@
 
 import { IBookChapter } from '../types/books'
 import { Card, CardContent } from '@gaqno-dev/ui/components/ui'
-import { cn } from '@gaqno-dev/core/lib/utils'
+import { cn } from '@gaqno-dev/frontcore/lib/utils'
 import { useBook } from '../hooks/useBooks'
 import { calculatePages } from '../utils/pageCalculator'
 

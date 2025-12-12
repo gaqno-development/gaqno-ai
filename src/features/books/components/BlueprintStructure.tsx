@@ -5,15 +5,15 @@ import { useBookChapters } from '../hooks/useBookChapters'
 import { useBook } from '../hooks/useBooks'
 import { useBookBlueprint } from '../hooks/useBookBlueprint'
 import { useBookCharacters } from '../hooks/useBookCharacters'
-import { useSupabaseClient } from '@gaqno-dev/core/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
 import { ChapterStatus } from '../types/books'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
 import { BookOpen, CheckCircle2, Circle, ChevronDown, ChevronRight, Loader2 } from 'lucide-react'
-import { cn } from '@gaqno-dev/core/lib/utils'
+import { cn } from '@gaqno-dev/frontcore/lib/utils'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-dev/ui/components/ui'
 import { calculatePages } from '../utils/pageCalculator'
-import { useUIStore } from '@gaqno-dev/core/store/uiStore'
+import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface IBlueprintStructureProps {
   bookId: string

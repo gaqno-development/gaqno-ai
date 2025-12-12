@@ -11,7 +11,7 @@ import { BookOpen, FileText, Settings, Save } from 'lucide-react'
 import { Input } from '@gaqno-dev/ui/components/ui'
 import { Label } from '@gaqno-dev/ui/components/ui'
 import { Button } from '@gaqno-dev/ui/components/ui'
-import { useUIStore } from '@gaqno-dev/core/store/uiStore'
+import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface IBlueprintContextPanelProps {
   bookId: string

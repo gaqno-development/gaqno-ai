@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@gaqno-dev/core/lib/utils'
+import { cn } from '@gaqno-dev/frontcore/lib/utils'
 import { Button } from '@gaqno-dev/ui/components/ui'
 
 const GENRES = [

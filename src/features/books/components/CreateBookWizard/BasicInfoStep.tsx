@@ -7,10 +7,10 @@ import { Textarea } from '@gaqno-dev/ui/components/ui'
 import { Button } from '@gaqno-dev/ui/components/ui'
 import { GenreSelector } from '../GenreSelector'
 import { AISuggestionButton } from '../AISuggestionButton'
-import { useSupabaseClient } from '@gaqno-dev/core/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
 import { useState } from 'react'
 import { Sparkles, Loader2 } from 'lucide-react'
-import { useUIStore } from '@gaqno-dev/core/store/uiStore'
+import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface IBasicInfoStepProps {
   onGenreSelect: (genre: string) => void

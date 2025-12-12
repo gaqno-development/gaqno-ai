@@ -8,8 +8,8 @@ import { Button } from '@gaqno-dev/ui/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-dev/ui/components/ui'
 import { ChevronDown, ChevronRight, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@gaqno-dev/core/hooks/useSupabaseClient'
-import { useUIStore } from '@gaqno-dev/core/store/uiStore'
+import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface IStructureStepProps {
   bookContext?: {

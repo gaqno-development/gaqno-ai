@@ -8,8 +8,8 @@ import { Textarea } from '@gaqno-dev/ui/components/ui'
 import { Button } from '@gaqno-dev/ui/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { MapPin, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@gaqno-dev/core/hooks/useSupabaseClient'
-import { useUIStore } from '@gaqno-dev/core/store/uiStore'
+import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface ISetting {
   id: string

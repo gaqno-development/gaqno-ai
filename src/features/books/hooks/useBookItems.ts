@@ -1,5 +1,5 @@
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/core/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/core/hooks/useSupabaseClient'
+import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
+import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
 import { useQueryClient } from '@tanstack/react-query'
 import { BookItemsService } from '../services/bookItemsService'
 import {
