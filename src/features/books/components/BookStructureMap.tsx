@@ -1,25 +1,23 @@
-'use client'
-
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 import { useBookChapters } from '../hooks/useBookChapters'
 import { useBookCharacters } from '../hooks/useBookCharacters'
 import { ChapterStatus } from '../types/books'
-import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
-import { ScrollArea } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
+import { ScrollArea } from '@gaqno-dev/frontcore/components/ui'
 import { BookOpen, Users, Plus } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@gaqno-dev/ui/components/ui'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@gaqno-dev/frontcore/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
 
 interface IBookStructureMapProps {
   bookId: string
 }
 
 export function BookStructureMap({ bookId }: IBookStructureMapProps) {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { chapters, isLoading: chaptersLoading, createChapter } = useBookChapters(bookId)
   const { characters, isLoading: charactersLoading, createCharacter } = useBookCharacters(bookId)
   const [showChapterDialog, setShowChapterDialog] = useState(false)
@@ -29,7 +27,7 @@ export function BookStructureMap({ bookId }: IBookStructureMapProps) {
   const [characterDescription, setCharacterDescription] = useState('')
 
   const handleChapterClick = (chapterId: string) => {
-    router.push(`/dashboard/books/${bookId}/chapters?chapter=${chapterId}`)
+    navigate(`/books/${bookId}/chapters?chapter=${chapterId}`)
   }
 
   const handleCreateChapter = async () => {

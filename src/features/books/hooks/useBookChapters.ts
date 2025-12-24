@@ -1,71 +1,28 @@
 import { useEffect, useRef } from 'react'
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
-import { useQueryClient } from '@tanstack/react-query'
-import { BookService } from '../services/bookService'
+import { useBookChaptersQueries } from '@/hooks/queries/useBookChaptersQueries'
+import { useBookChaptersMutations } from '@/hooks/mutations/useBookChaptersMutations'
 import {
-  IBookChapter,
   ICreateBookChapterInput,
   IUpdateBookChapterInput,
 } from '../types/books'
 
 export const useBookChapters = (bookId: string | null) => {
-  const supabase = useSupabaseClient()
-  const queryClient = useQueryClient()
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const queries = useBookChaptersQueries()
+  const mutations = useBookChaptersMutations()
 
-  const { data: chapters, isLoading, refetch } = useSupabaseQuery<IBookChapter[]>(
-    ['book-chapters', bookId ?? 'no-id'],
-    async () => {
-      if (!bookId) return []
-
-      const service = new BookService(supabase)
-      return service.getChapters(bookId)
-    },
-    {
-      enabled: !!bookId,
-    }
-  )
-
-  const createMutation = useSupabaseMutation<IBookChapter, ICreateBookChapterInput>(
-    async (input) => {
-      const service = new BookService(supabase)
-      return service.createChapter(input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-chapters'] })
-      },
-    }
-  )
-
-  const updateMutation = useSupabaseMutation<IBookChapter, { chapterId: string; input: IUpdateBookChapterInput }>(
-    async ({ chapterId, input }) => {
-      const service = new BookService(supabase)
-      return service.updateChapter(chapterId, input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-chapters'] })
-      },
-    }
-  )
-
-  const deleteMutation = useSupabaseMutation<void, string>(
-    async (chapterId) => {
-      const service = new BookService(supabase)
-      return service.deleteChapter(chapterId)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-chapters'] })
-      },
-    }
-  )
+  const { data: chapters, isLoading, refetch } = queries.getChapters(bookId || '')
 
   const createChapter = async (input: ICreateBookChapterInput) => {
     try {
-      const result = await createMutation.mutateAsync(input)
+      const result = await mutations.createChapter.mutateAsync({ bookId: input.book_id, data: {
+        chapter_number: input.chapter_number,
+        title: input.title,
+        content: input.content,
+        status: input.status,
+        notes: input.notes,
+        metadata: input.metadata,
+      }})
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to create chapter' }
@@ -74,7 +31,7 @@ export const useBookChapters = (bookId: string | null) => {
 
   const updateChapter = async (chapterId: string, input: IUpdateBookChapterInput) => {
     try {
-      const result = await updateMutation.mutateAsync({ chapterId, input })
+      const result = await mutations.updateChapter.mutateAsync({ chapterId, data: input })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to update chapter' }
@@ -93,7 +50,7 @@ export const useBookChapters = (bookId: string | null) => {
 
   const deleteChapter = async (chapterId: string) => {
     try {
-      await deleteMutation.mutateAsync(chapterId)
+      await mutations.deleteChapter.mutateAsync(chapterId)
       return { success: true }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to delete chapter' }
@@ -116,30 +73,18 @@ export const useBookChapters = (bookId: string | null) => {
     updateChapter,
     updateChapterAutoSave,
     deleteChapter,
-    isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
-    isDeleting: deleteMutation.isPending,
+    isCreating: mutations.createChapter.isPending,
+    isUpdating: mutations.updateChapter.isPending,
+    isDeleting: mutations.deleteChapter.isPending,
   }
 }
 
 export const useBookChapter = (chapterId: string | null) => {
-  const supabase = useSupabaseClient()
-
-  const { data: chapter, isLoading, refetch } = useSupabaseQuery<IBookChapter | null>(
-    ['book-chapter', chapterId ?? 'no-id'],
-    async () => {
-      if (!chapterId) return null
-
-      const service = new BookService(supabase)
-      return service.getChapterById(chapterId)
-    },
-    {
-      enabled: !!chapterId,
-    }
-  )
+  const queries = useBookChaptersQueries()
+  const { data: chapter, isLoading, refetch } = queries.getChapterById(chapterId || '')
 
   return {
-    chapter,
+    chapter: chapter || null,
     isLoading,
     refetch,
   }

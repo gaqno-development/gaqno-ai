@@ -1,15 +1,12 @@
-'use client'
-
-import { use } from 'react'
+import { useParams } from 'react-router-dom'
 import { ExportOptions } from '@/features/books/components/ExportOptions'
 import { ExportPreview } from '@/features/books/components/ExportPreview'
-import { BookNavigationHeader } from '@/features/books/components/BookNavigationHeader'
 import { useBook } from '@/features/books/hooks/useBooks'
 import { Loader2 } from 'lucide-react'
 
-export default function ExportPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const { book, isLoading } = useBook(id)
+export default function BookExportPage() {
+  const { id } = useParams<{ id: string }>()
+  const { book, isLoading } = useBook(id || '')
 
   if (isLoading) {
     return (
@@ -32,10 +29,10 @@ export default function ExportPage({ params }: { params: Promise<{ id: string }>
       <div className="flex-1 overflow-auto p-4">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-8">
-            <ExportOptions bookId={id} />
+            <ExportOptions bookId={id || ''} />
           </div>
           <div className="col-span-4">
-            <ExportPreview bookId={id} />
+            <ExportPreview bookId={id || ''} />
           </div>
         </div>
       </div>

@@ -1,14 +1,14 @@
-'use client'
+
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
 import { GenreSelector } from './GenreSelector'
 import { StyleSelector } from './StyleSelector'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { useState } from 'react'
 
 const bookFormSchema = z.object({

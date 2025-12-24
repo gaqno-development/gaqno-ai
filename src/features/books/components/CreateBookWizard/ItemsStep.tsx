@@ -1,14 +1,14 @@
-'use client'
+
 
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { Package, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface IItem {
@@ -69,7 +69,7 @@ export function ItemsStep({
         relevance: `Explique a relevância do objeto "${itemName}" para a história do livro "${bookContext?.title || 'Novo Livro'}"`,
       }
 
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',
@@ -103,7 +103,7 @@ export function ItemsStep({
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere 2 a 4 itens, objetos ou artefatos importantes para a história. Para cada item, forneça: nome, função narrativa, origem e relevância para a história.`
 
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',

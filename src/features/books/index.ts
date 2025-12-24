@@ -7,5 +7,4 @@ export * from './hooks/useBookHistory'
 export * from './hooks/useBookExport'
 export * from './hooks/useBookCharacters'
 export * from './hooks/useBookGlossary'
-export * from './services/bookService'
 

@@ -1,8 +1,8 @@
-'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
 import { cn } from '@gaqno-dev/frontcore/lib/utils'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 
 const STYLES = [
   {

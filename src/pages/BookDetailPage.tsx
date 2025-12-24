@@ -1,15 +1,14 @@
-'use client'
-
-import { use } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { BookBlueprintPanel } from '@/features/books/components/BookBlueprintPanel'
 import { useBook } from '@/features/books/hooks/useBooks'
-import { LoadingSkeleton } from '@gaqno-dev/ui/components/ui'
-import { EmptyState } from '@gaqno-dev/ui/components/ui'
+import { LoadingSkeleton } from '@gaqno-dev/frontcore/components/ui'
+import { EmptyState } from '@gaqno-dev/frontcore/components/ui'
 import { BookX } from 'lucide-react'
 
-export default function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const { book, isLoading } = useBook(id)
+export default function BookDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { book, isLoading } = useBook(id || '')
 
   if (isLoading) {
     return <LoadingSkeleton variant="card" count={1} />
@@ -23,12 +22,12 @@ export default function BookDetailPage({ params }: { params: Promise<{ id: strin
         description="O livro que você está procurando não existe ou foi removido."
         action={{
           label: 'Voltar para Meus Livros',
-          onClick: () => window.location.href = '/dashboard/books',
+          onClick: () => navigate('/books'),
         }}
       />
     )
   }
 
-  return <BookBlueprintPanel bookId={id} />
+  return <BookBlueprintPanel bookId={id || ''} />
 }
 

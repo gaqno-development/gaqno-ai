@@ -1,8 +1,6 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 import { useBook } from '../hooks/useBooks'
-import { Tabs, TabsList, TabsTrigger } from '@gaqno-dev/ui/components/ui'
+import { Tabs, TabsList, TabsTrigger } from '@gaqno-dev/frontcore/components/ui'
 import { BookOpen, FileText, Image, Download } from 'lucide-react'
 
 interface IBookNavigationHeaderProps {
@@ -11,20 +9,20 @@ interface IBookNavigationHeaderProps {
 }
 
 export function BookNavigationHeader({ bookId, currentTab }: IBookNavigationHeaderProps) {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { book } = useBook(bookId)
 
   const handleTabChange = (value: string) => {
     const routes: Record<string, string> = {
-      blueprint: `/dashboard/books/${bookId}`,
-      chapters: `/dashboard/books/${bookId}/chapters`,
-      cover: `/dashboard/books/${bookId}/cover`,
-      export: `/dashboard/books/${bookId}/export`,
+      blueprint: `/books/${bookId}`,
+      chapters: `/books/${bookId}/chapters`,
+      cover: `/books/${bookId}/cover`,
+      export: `/books/${bookId}/export`,
     }
 
     const route = routes[value]
     if (route) {
-      router.push(route)
+      navigate(route)
     }
   }
 

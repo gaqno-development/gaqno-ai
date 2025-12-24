@@ -1,69 +1,19 @@
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
-import { useQueryClient } from '@tanstack/react-query'
-import { BookItemsService } from '../services/bookItemsService'
+import { useBookItemsQueries } from '@/hooks/queries/useBookItemsQueries'
+import { useBookItemsMutations } from '@/hooks/mutations/useBookItemsMutations'
 import {
-  IBookItem,
   ICreateBookItemInput,
   IUpdateBookItemInput,
 } from '../types/books'
 
 export const useBookItems = (bookId: string | null) => {
-  const supabase = useSupabaseClient()
-  const queryClient = useQueryClient()
+  const queries = useBookItemsQueries()
+  const mutations = useBookItemsMutations()
 
-  const { data: items, isLoading, refetch } = useSupabaseQuery<IBookItem[]>(
-    ['book-items', bookId ?? 'no-id'],
-    async () => {
-      if (!bookId) return []
-
-      const service = new BookItemsService(supabase)
-      return service.getItems(bookId)
-    },
-    {
-      enabled: !!bookId,
-    }
-  )
-
-  const createMutation = useSupabaseMutation<IBookItem, ICreateBookItemInput>(
-    async (input) => {
-      const service = new BookItemsService(supabase)
-      return service.createItem(input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-items'] })
-      },
-    }
-  )
-
-  const updateMutation = useSupabaseMutation<IBookItem, { itemId: string; input: IUpdateBookItemInput }>(
-    async ({ itemId, input }) => {
-      const service = new BookItemsService(supabase)
-      return service.updateItem(itemId, input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-items'] })
-      },
-    }
-  )
-
-  const deleteMutation = useSupabaseMutation<void, string>(
-    async (itemId) => {
-      const service = new BookItemsService(supabase)
-      return service.deleteItem(itemId)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-items'] })
-      },
-    }
-  )
+  const { data: items, isLoading, refetch } = queries.getByBookId(bookId || '')
 
   const createItem = async (input: ICreateBookItemInput) => {
     try {
-      const result = await createMutation.mutateAsync(input)
+      const result = await mutations.create.mutateAsync(input)
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to create item' }
@@ -72,7 +22,7 @@ export const useBookItems = (bookId: string | null) => {
 
   const updateItem = async (itemId: string, input: IUpdateBookItemInput) => {
     try {
-      const result = await updateMutation.mutateAsync({ itemId, input })
+      const result = await mutations.update.mutateAsync({ id: itemId, data: input })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to update item' }
@@ -81,7 +31,7 @@ export const useBookItems = (bookId: string | null) => {
 
   const deleteItem = async (itemId: string) => {
     try {
-      await deleteMutation.mutateAsync(itemId)
+      await mutations.delete.mutateAsync(itemId)
       return { success: true }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to delete item' }
@@ -95,9 +45,8 @@ export const useBookItems = (bookId: string | null) => {
     createItem,
     updateItem,
     deleteItem,
-    isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
-    isDeleting: deleteMutation.isPending,
+    isCreating: mutations.create.isPending,
+    isUpdating: mutations.update.isPending,
+    isDeleting: mutations.delete.isPending,
   }
 }
-

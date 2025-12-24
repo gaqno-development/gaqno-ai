@@ -1,12 +1,12 @@
-'use client'
+
 
 import { useFormContext } from 'react-hook-form'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
-import { Button } from '@gaqno-dev/ui/components/ui'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 import { useState } from 'react'
 import { Sparkles, Loader2 } from 'lucide-react'
@@ -42,7 +42,7 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGenerateTone = async (): Promise<string> => {
     setGeneratingFor('tone')
     try {
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',
@@ -65,7 +65,7 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGeneratePacing = async (): Promise<string> => {
     setGeneratingFor('pacing')
     try {
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',
@@ -88,7 +88,7 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGenerateAudience = async (): Promise<string> => {
     setGeneratingFor('audience')
     try {
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',
@@ -110,7 +110,7 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGenerateThemes = async (): Promise<string> => {
     setGeneratingFor('themes')
     try {
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',
@@ -144,7 +144,7 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere uma análise completa de tom e estilo narrativo incluindo: tom narrativo (leve, sombrio, épico, etc.), ritmo (rápido, contemplativo, equilibrado, etc.), público-alvo apropriado e temas centrais/mensagens que o livro explora.`
 
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',

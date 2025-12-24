@@ -1,14 +1,14 @@
-'use client'
+
 
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { MapPin, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface ISetting {
@@ -62,7 +62,7 @@ export function WorldSettingsStep({
     try {
       const prompt = `Crie uma descrição detalhada para o cenário "${settingName}" no livro "${bookContext?.title || 'Novo Livro'}" do gênero ${bookContext?.genre || 'ficção'}. A descrição deve incluir características físicas, atmosfera, importância na história.`
       
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',
@@ -96,7 +96,7 @@ export function WorldSettingsStep({
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere 3 a 5 cenários principais onde a história se desenrola. Para cada cenário, forneça: nome, descrição detalhada (características físicas, atmosfera, importância na história) e opcionalmente uma linha do tempo ou contexto histórico.`
 
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',

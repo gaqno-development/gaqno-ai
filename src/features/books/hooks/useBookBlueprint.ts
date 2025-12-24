@@ -1,57 +1,27 @@
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
-import { useQueryClient } from '@tanstack/react-query'
-import { BookService } from '../services/bookService'
+import { useBooksQueries } from '@/hooks/queries/useBooksQueries'
+import { useBooksMutations } from '@/hooks/mutations/useBooksMutations'
 import {
-  IBookBlueprint,
   ICreateBookBlueprintInput,
   IUpdateBookBlueprintInput,
 } from '../types/books'
 
 export const useBookBlueprint = (bookId: string | null) => {
-  const supabase = useSupabaseClient()
-  const queryClient = useQueryClient()
+  const queries = useBooksQueries()
+  const mutations = useBooksMutations()
 
-  const { data: blueprint, isLoading, refetch } = useSupabaseQuery<IBookBlueprint | null>(
-    ['book-blueprint', bookId ?? 'no-id'],
-    async () => {
-      if (!bookId) return null
-
-      const service = new BookService(supabase)
-      return service.getBlueprint(bookId)
-    },
-    {
-      enabled: !!bookId,
-    }
-  )
-
-  const createMutation = useSupabaseMutation<IBookBlueprint, ICreateBookBlueprintInput>(
-    async (input) => {
-      const service = new BookService(supabase)
-      return service.createBlueprint(input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-blueprint'] })
-      },
-    }
-  )
-
-  const updateMutation = useSupabaseMutation<IBookBlueprint, { bookId: string; input: IUpdateBookBlueprintInput }>(
-    async ({ bookId, input }) => {
-      const service = new BookService(supabase)
-      return service.updateBlueprint(bookId, input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-blueprint'] })
-      },
-    }
-  )
+  const { data: blueprint, isLoading, refetch } = queries.getBlueprint(bookId || '')
 
   const createBlueprint = async (input: ICreateBookBlueprintInput) => {
     try {
-      const result = await createMutation.mutateAsync(input)
+      const result = await mutations.createBlueprint.mutateAsync({
+        bookId: input.book_id,
+        data: {
+          summary: input.summary,
+          structure: input.structure,
+          characters: input.characters,
+          context: input.context,
+        }
+      })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to create blueprint' }
@@ -60,7 +30,7 @@ export const useBookBlueprint = (bookId: string | null) => {
 
   const updateBlueprint = async (bookId: string, input: IUpdateBookBlueprintInput) => {
     try {
-      const result = await updateMutation.mutateAsync({ bookId, input })
+      const result = await mutations.updateBlueprint.mutateAsync({ bookId, data: input })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to update blueprint' }
@@ -68,12 +38,12 @@ export const useBookBlueprint = (bookId: string | null) => {
   }
 
   return {
-    blueprint,
+    blueprint: blueprint || null,
     isLoading,
     refetch,
     createBlueprint,
     updateBlueprint,
-    isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
+    isCreating: mutations.createBlueprint.isPending,
+    isUpdating: mutations.updateBlueprint.isPending,
   }
 }

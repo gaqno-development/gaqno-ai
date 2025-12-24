@@ -1,69 +1,25 @@
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
-import { useQueryClient } from '@tanstack/react-query'
-import { BookService } from '../services/bookService'
+import { useBooksQueries } from '@/hooks/queries/useBooksQueries'
+import { useBooksMutations } from '@/hooks/mutations/useBooksMutations'
 import {
-  IBookGlossary,
   ICreateBookGlossaryInput,
   IUpdateBookGlossaryInput,
 } from '../types/books'
 
 export const useBookGlossary = (bookId: string | null) => {
-  const supabase = useSupabaseClient()
-  const queryClient = useQueryClient()
+  const queries = useBooksQueries()
+  const mutations = useBooksMutations()
 
-  const { data: glossary, isLoading, refetch } = useSupabaseQuery<IBookGlossary[]>(
-    ['book-glossary', bookId ?? 'no-id'],
-    async () => {
-      if (!bookId) return []
-
-      const service = new BookService(supabase)
-      return service.getGlossary(bookId)
-    },
-    {
-      enabled: !!bookId,
-    }
-  )
-
-  const createMutation = useSupabaseMutation<IBookGlossary, ICreateBookGlossaryInput>(
-    async (input) => {
-      const service = new BookService(supabase)
-      return service.createGlossaryTerm(input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-glossary'] })
-      },
-    }
-  )
-
-  const updateMutation = useSupabaseMutation<IBookGlossary, { glossaryId: string; input: IUpdateBookGlossaryInput }>(
-    async ({ glossaryId, input }) => {
-      const service = new BookService(supabase)
-      return service.updateGlossaryTerm(glossaryId, input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-glossary'] })
-      },
-    }
-  )
-
-  const deleteMutation = useSupabaseMutation<void, string>(
-    async (glossaryId) => {
-      const service = new BookService(supabase)
-      return service.deleteGlossaryTerm(glossaryId)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-glossary'] })
-      },
-    }
-  )
+  const { data: glossary, isLoading, refetch } = queries.getGlossary(bookId || '')
 
   const createGlossaryTerm = async (input: ICreateBookGlossaryInput) => {
     try {
-      const result = await createMutation.mutateAsync(input)
+      const result = await mutations.createGlossaryTerm.mutateAsync({
+        bookId: input.book_id,
+        data: {
+          term: input.term,
+          definition: input.definition,
+        }
+      })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to create glossary term' }
@@ -72,7 +28,10 @@ export const useBookGlossary = (bookId: string | null) => {
 
   const updateGlossaryTerm = async (glossaryId: string, input: IUpdateBookGlossaryInput) => {
     try {
-      const result = await updateMutation.mutateAsync({ glossaryId, input })
+      const result = await mutations.updateGlossaryTerm.mutateAsync({
+        glossaryId,
+        data: input
+      })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to update glossary term' }
@@ -81,7 +40,7 @@ export const useBookGlossary = (bookId: string | null) => {
 
   const deleteGlossaryTerm = async (glossaryId: string) => {
     try {
-      await deleteMutation.mutateAsync(glossaryId)
+      await mutations.deleteGlossaryTerm.mutateAsync(glossaryId)
       return { success: true }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to delete glossary term' }
@@ -95,9 +54,8 @@ export const useBookGlossary = (bookId: string | null) => {
     createGlossaryTerm,
     updateGlossaryTerm,
     deleteGlossaryTerm,
-    isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
-    isDeleting: deleteMutation.isPending,
+    isCreating: mutations.createGlossaryTerm.isPending,
+    isUpdating: mutations.updateGlossaryTerm.isPending,
+    isDeleting: mutations.deleteGlossaryTerm.isPending,
   }
 }
-

@@ -1,57 +1,27 @@
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
-import { useQueryClient } from '@tanstack/react-query'
-import { BookService } from '../services/bookService'
+import { useBooksQueries } from '@/hooks/queries/useBooksQueries'
+import { useBooksMutations } from '@/hooks/mutations/useBooksMutations'
 import {
-  IBookExport,
   ICreateBookExportInput,
   IUpdateBookExportInput,
 } from '../types/books'
 
 export const useBookExports = (bookId: string | null) => {
-  const supabase = useSupabaseClient()
-  const queryClient = useQueryClient()
+  const queries = useBooksQueries()
+  const mutations = useBooksMutations()
 
-  const { data: exports, isLoading, refetch } = useSupabaseQuery<IBookExport[]>(
-    ['book-exports', bookId ?? 'no-id'],
-    async () => {
-      if (!bookId) return []
-
-      const service = new BookService(supabase)
-      return service.getExports(bookId)
-    },
-    {
-      enabled: !!bookId,
-    }
-  )
-
-  const createMutation = useSupabaseMutation<IBookExport, ICreateBookExportInput>(
-    async (input) => {
-      const service = new BookService(supabase)
-      return service.createExport(input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-exports'] })
-      },
-    }
-  )
-
-  const updateMutation = useSupabaseMutation<IBookExport, { exportId: string; input: IUpdateBookExportInput }>(
-    async ({ exportId, input }) => {
-      const service = new BookService(supabase)
-      return service.updateExport(exportId, input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-exports'] })
-      },
-    }
-  )
+  const { data: exports, isLoading, refetch } = queries.getExports(bookId || '')
 
   const createExport = async (input: ICreateBookExportInput) => {
     try {
-      const result = await createMutation.mutateAsync(input)
+      const result = await mutations.createExport.mutateAsync({
+        bookId: input.book_id,
+        data: {
+          format: input.format,
+          file_url: input.file_url,
+          metadata: input.metadata,
+          status: input.status,
+        }
+      })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to create export' }
@@ -60,7 +30,15 @@ export const useBookExports = (bookId: string | null) => {
 
   const updateExport = async (exportId: string, input: IUpdateBookExportInput) => {
     try {
-      const result = await updateMutation.mutateAsync({ exportId, input })
+      const result = await mutations.updateExport.mutateAsync({
+        exportId,
+        data: {
+          file_url: input.file_url,
+          metadata: input.metadata,
+          status: input.status,
+          completed_at: input.completed_at,
+        }
+      })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to update export' }
@@ -73,7 +51,7 @@ export const useBookExports = (bookId: string | null) => {
     refetch,
     createExport,
     updateExport,
-    isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
+    isCreating: mutations.createExport.isPending,
+    isUpdating: mutations.updateExport.isPending,
   }
 }

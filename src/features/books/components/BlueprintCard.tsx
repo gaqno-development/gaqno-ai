@@ -1,8 +1,8 @@
-'use client'
+
 
 import { useState, useEffect } from 'react'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { Save, X } from 'lucide-react'
 
 interface IBlueprintCardProps {

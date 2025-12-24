@@ -1,7 +1,7 @@
-'use client'
+
 
 import { cn } from '@gaqno-dev/frontcore/lib/utils'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 
 const GENRES = [
   { id: 'fiction', label: 'Ficção', color: 'bg-blue-500' },

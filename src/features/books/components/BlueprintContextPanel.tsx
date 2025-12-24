@@ -1,16 +1,16 @@
-'use client'
+
 
 import { useMemo, useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
 import { CharacterList } from './CharacterList'
 import { ConsistencyAlerts } from './ConsistencyAlerts'
 import { useBook, useBooks } from '../hooks/useBooks'
 import { useBookChapters } from '../hooks/useBookChapters'
 import { formatPageInfo, calculatePages } from '../utils/pageCalculator'
 import { BookOpen, FileText, Settings, Save } from 'lucide-react'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
 interface IBlueprintContextPanelProps {

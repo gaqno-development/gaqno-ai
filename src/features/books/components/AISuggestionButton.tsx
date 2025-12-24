@@ -1,7 +1,7 @@
-'use client'
+
 
 import { AISuggestionPopover } from './AISuggestionPopover'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { Sparkles } from 'lucide-react'
 
 interface IAISuggestionButtonProps {

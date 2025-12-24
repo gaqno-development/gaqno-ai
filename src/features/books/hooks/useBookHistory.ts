@@ -1,44 +1,35 @@
-import { useSupabaseQuery, useSupabaseMutation } from '@gaqno-dev/frontcore/hooks/useSupabaseQuery'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
-import { useQueryClient } from '@tanstack/react-query'
-import { BookService } from '../services/bookService'
+import { useBooksQueries } from '@/hooks/queries/useBooksQueries'
+import { useBooksMutations } from '@/hooks/mutations/useBooksMutations'
+import { coreAxiosClient } from '@gaqno-dev/frontcore/utils/api'
+import { transformers } from '@/lib/api-transformers'
 import {
-  IBookHistory,
   ICreateBookHistoryInput,
 } from '../types/books'
 
-export const useBookHistory = (chapterId: string | null) => {
-  const supabase = useSupabaseClient()
-  const queryClient = useQueryClient()
+const aiClient = coreAxiosClient.ai;
 
-  const { data: history, isLoading, refetch } = useSupabaseQuery<IBookHistory[]>(
-    ['book-history', chapterId ?? 'no-id'],
-    async () => {
-      if (!chapterId) return []
+export const useBookHistory = (bookId: string | null) => {
+  const queries = useBooksQueries()
+  const mutations = useBooksMutations()
 
-      const service = new BookService(supabase)
-      return service.getHistory(chapterId)
-    },
-    {
-      enabled: !!chapterId,
-    }
-  )
-
-  const createMutation = useSupabaseMutation<IBookHistory, ICreateBookHistoryInput>(
-    async (input) => {
-      const service = new BookService(supabase)
-      return service.createHistory(input)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['book-history'] })
-      },
-    }
-  )
+  const { data: history, isLoading, refetch } = queries.getHistory(bookId || '')
 
   const createHistory = async (input: ICreateBookHistoryInput) => {
     try {
-      const result = await createMutation.mutateAsync(input)
+      const response = await aiClient.get<any>(`/books/chapters/${input.chapter_id}`)
+      const chapter = transformers.chapter(response.data)
+      if (!chapter) {
+        throw new Error('Chapter not found')
+      }
+      const result = await mutations.createHistory.mutateAsync({
+        bookId: chapter.book_id,
+        data: {
+          chapter_id: input.chapter_id,
+          content_snapshot: input.content_snapshot,
+          version_number: input.version_number,
+          change_summary: input.change_summary,
+        }
+      })
       return { success: true, data: result }
     } catch (error: any) {
       return { success: false, error: error.message || 'Failed to create history' }
@@ -50,6 +41,6 @@ export const useBookHistory = (chapterId: string | null) => {
     isLoading,
     refetch,
     createHistory,
-    isCreating: createMutation.isPending,
+    isCreating: mutations.createHistory.isPending,
   }
 }

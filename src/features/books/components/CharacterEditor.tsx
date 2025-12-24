@@ -1,18 +1,19 @@
-'use client'
+
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
-import { Avatar, AvatarFallback, AvatarImage } from '@gaqno-dev/ui/components/ui'
-import { Badge } from '@gaqno-dev/ui/components/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
+import { Avatar, AvatarFallback, AvatarImage } from '@gaqno-dev/frontcore/components/ui'
+import { Badge } from '@gaqno-dev/frontcore/components/ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@gaqno-dev/frontcore/components/ui'
 import { useBookCharacters } from '../hooks/useBookCharacters'
 import { useBook } from '../hooks/useBooks'
 import { useBookBlueprint } from '../hooks/useBookBlueprint'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@/utils/supabaseClient'
+import { useAuth } from '@gaqno-dev/frontcore/contexts'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 import { IBookCharacter } from '../types/books'
 import { ICharacterDetails, CharacterRole } from '../types/character'
@@ -23,7 +24,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@gaqno-dev/ui/components/ui'
+} from '@gaqno-dev/frontcore/components/ui'
 
 interface ICharacterEditorProps {
   bookId: string
@@ -32,6 +33,7 @@ interface ICharacterEditorProps {
 
 export function CharacterEditor({ bookId, characterId }: ICharacterEditorProps) {
   const supabase = useSupabaseClient()
+  const { user } = useAuth()
   const { characters, updateCharacter, isLoading } = useBookCharacters(bookId)
   const { book } = useBook(bookId)
   const { blueprint } = useBookBlueprint(bookId)
@@ -71,13 +73,11 @@ export function CharacterEditor({ bookId, characterId }: ICharacterEditorProps) 
 
     setIsAnalyzing(true)
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      if (!session) {
+      if (!user) {
         throw new Error('Você precisa estar autenticado')
       }
 
-      const { data, error } = await supabase.functions.invoke('analyze-character', {
+      const { data, error } = await supabase.functions.invoke<{ characterDetails?: ICharacterDetails }>('analyze-character', {
         body: {
           name,
           description: description || undefined,
@@ -127,13 +127,11 @@ export function CharacterEditor({ bookId, characterId }: ICharacterEditorProps) 
 
     setIsGeneratingAvatar(true)
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      if (!session) {
+      if (!user) {
         throw new Error('Você precisa estar autenticado')
       }
 
-      const { data, error } = await supabase.functions.invoke('generate-character-avatar', {
+      const { data, error } = await supabase.functions.invoke<{ imageUrl?: string; avatarPrompt?: string }>('generate-character-avatar', {
         body: {
           character: {
             name,

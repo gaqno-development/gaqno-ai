@@ -1,17 +1,15 @@
-'use client'
-
 import { useMemo, useState } from 'react'
 import { useBookChapters } from '../hooks/useBookChapters'
 import { useBook } from '../hooks/useBooks'
 import { useBookBlueprint } from '../hooks/useBookBlueprint'
 import { useBookCharacters } from '../hooks/useBookCharacters'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { ChapterStatus } from '../types/books'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
+import { useNavigate } from 'react-router-dom'
+import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
 import { BookOpen, CheckCircle2, Circle, ChevronDown, ChevronRight, Loader2 } from 'lucide-react'
 import { cn } from '@gaqno-dev/frontcore/lib/utils'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-dev/ui/components/ui'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-dev/frontcore/components/ui'
 import { calculatePages } from '../utils/pageCalculator'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 
@@ -32,7 +30,7 @@ const SECTION_NAMES: Record<string, string> = {
 }
 
 export function BlueprintStructure({ bookId, structure }: IBlueprintStructureProps) {
-  const router = useRouter()
+  const navigate = useNavigate()
   const supabase = useSupabaseClient()
   const { chapters, createChapter, updateChapter, isCreating } = useBookChapters(bookId)
   const { book } = useBook(bookId)
@@ -99,7 +97,7 @@ export function BlueprintStructure({ bookId, structure }: IBlueprintStructurePro
     const existingChapter = chapters.find(c => c.chapter_number === chapterNumber)
     
     if (existingChapter) {
-      router.push(`/dashboard/books/${bookId}/chapters?chapter=${existingChapter.id}`)
+      navigate(`/books/${bookId}/chapters?chapter=${existingChapter.id}`)
       return
     }
 
@@ -135,7 +133,7 @@ export function BlueprintStructure({ bookId, structure }: IBlueprintStructurePro
       duration: 2000,
     })
 
-    router.push(`/dashboard/books/${bookId}/chapters?chapter=${newChapter.id}&generate=true`)
+    navigate(`/books/${bookId}/chapters?chapter=${newChapter.id}&generate=true`)
   }
 
   const toggleSection = (section: string) => {

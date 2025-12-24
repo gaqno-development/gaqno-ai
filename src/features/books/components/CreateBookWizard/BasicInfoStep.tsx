@@ -1,13 +1,13 @@
-'use client'
+
 
 import { useFormContext } from 'react-hook-form'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { GenreSelector } from '../GenreSelector'
 import { AISuggestionButton } from '../AISuggestionButton'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { useState } from 'react'
 import { Sparkles, Loader2 } from 'lucide-react'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
@@ -58,7 +58,7 @@ export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateComplete
         prompt += `. A premissa do livro é: ${premise.substring(0, 300)}`
       }
       
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: prompt,
           genre: genre || 'fiction',
@@ -108,7 +108,7 @@ export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateComplete
       
       prompt += '. A premissa deve incluir os elementos principais da história, personagens principais e o conflito central.'
       
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookTitle || 'Novo Livro',
           genre: genre || 'fiction',
@@ -141,7 +141,7 @@ export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateComplete
         })
       } else {
         // Fallback: gerar apenas informações básicas
-        const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+        const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
           body: {
             title: 'Gere um livro completo com título, gênero e premissa envolvente',
             genre: 'fiction',

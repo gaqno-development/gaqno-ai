@@ -1,16 +1,14 @@
-'use client'
-
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
+import { useNavigate } from 'react-router-dom'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
 import { CreateBookWizard } from '@/features/books/components/CreateBookWizard'
 import { useBooks } from '@/features/books/hooks/useBooks'
 import { BookOpen, Plus } from 'lucide-react'
-import { EmptyState } from '@gaqno-dev/ui/components/ui'
-import { LoadingSkeleton } from '@gaqno-dev/ui/components/ui'
+import { EmptyState } from '@gaqno-dev/frontcore/components/ui'
+import { LoadingSkeleton } from '@gaqno-dev/frontcore/components/ui'
 
 export default function BooksPage() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const { books, isLoading } = useBooks()
   const [showCreateForm, setShowCreateForm] = useState(false)
 
@@ -59,13 +57,13 @@ export default function BooksPage() {
             <Card
               key={book.id}
               className="cursor-pointer hover:border-primary hover:shadow-md transition-all duration-200"
-              onClick={() => router.push(`/dashboard/books/${book.id}`)}
+              onClick={() => navigate(`/books/${book.id}`)}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  router.push(`/dashboard/books/${book.id}`)
+                  navigate(`/books/${book.id}`)
                 }
               }}
               aria-label={`Abrir livro ${book.title}`}

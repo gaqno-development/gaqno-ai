@@ -1,14 +1,11 @@
-'use client'
-
-import { use } from 'react'
+import { useParams } from 'react-router-dom'
 import { CoverDesigner } from '@/features/books/components/CoverDesigner'
-import { BookNavigationHeader } from '@/features/books/components/BookNavigationHeader'
 import { useBook } from '@/features/books/hooks/useBooks'
 import { Loader2 } from 'lucide-react'
 
-export default function CoverPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const { book, isLoading } = useBook(id)
+export default function BookCoverPage() {
+  const { id } = useParams<{ id: string }>()
+  const { book, isLoading } = useBook(id || '')
 
   if (isLoading) {
     return (
@@ -29,7 +26,7 @@ export default function CoverPage({ params }: { params: Promise<{ id: string }> 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex-1 overflow-auto">
-        <CoverDesigner bookId={id} />
+        <CoverDesigner bookId={id || ''} />
       </div>
     </div>
   )

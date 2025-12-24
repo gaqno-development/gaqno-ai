@@ -1,8 +1,8 @@
-'use client'
+
 
 import { useState } from 'react'
-import { Popover, PopoverContent, PopoverTrigger } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Popover, PopoverContent, PopoverTrigger } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { Loader2, Sparkles, Check, X, RefreshCw } from 'lucide-react'
 import { cn } from '@gaqno-dev/frontcore/lib/utils'
 

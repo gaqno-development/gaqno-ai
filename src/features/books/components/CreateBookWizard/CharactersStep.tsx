@@ -1,14 +1,14 @@
-'use client'
+
 
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
-import { Input } from '@gaqno-dev/ui/components/ui'
-import { Label } from '@gaqno-dev/ui/components/ui'
-import { Textarea } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
+import { Input } from '@gaqno-dev/frontcore/components/ui'
+import { Label } from '@gaqno-dev/frontcore/components/ui'
+import { Textarea } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { User, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
 import {
   Select,
@@ -16,7 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@gaqno-dev/ui/components/ui'
+} from '@gaqno-dev/frontcore/components/ui'
 
 interface ICharacter {
   id: string
@@ -75,7 +75,7 @@ export function CharactersStep({
   const handleGenerateCharacterDetails = async (characterId: string, characterName: string): Promise<string> => {
     setGeneratingFor(characterId)
     try {
-      const { data, error } = await supabase.functions.invoke('analyze-character', {
+      const { data, error } = await supabase.functions.invoke<any>('analyze-character', {
         body: {
           name: characterName,
           description: characters.find(c => c.id === characterId)?.description || undefined,
@@ -122,7 +122,7 @@ export function CharactersStep({
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere um elenco inicial de 3 a 5 personagens principais. Para cada personagem, forneça: nome, papel na história (protagonista, antagonista, coadjuvante, secundário), descrição física, personalidade, motivações e arco narrativo inicial.`
 
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: bookContext?.title || 'Novo Livro',
           genre: bookContext?.genre || 'fiction',

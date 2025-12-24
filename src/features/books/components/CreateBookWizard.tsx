@@ -1,27 +1,25 @@
-'use client'
-
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 import { FormProvider } from 'react-hook-form'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/ui/components/ui'
-import { Button } from '@gaqno-dev/ui/components/ui'
-import { Progress } from '@gaqno-dev/ui/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-dev/frontcore/components/ui'
+import { Button } from '@gaqno-dev/frontcore/components/ui'
+import { Progress } from '@gaqno-dev/frontcore/components/ui'
 import { useBooks } from '../hooks/useBooks'
 import { useCreateBookWizard } from '../hooks/useCreateBookWizard'
 import { BookStatus } from '../types/books'
 import { useUIStore } from '@gaqno-dev/frontcore/store/uiStore'
-import { useSupabaseClient } from '@gaqno-dev/frontcore/hooks/useSupabaseClient'
 import { useTenant, useAuth } from '@gaqno-dev/frontcore/contexts'
+import { useSupabaseClient } from '@/utils/supabaseClient'
 import { BasicInfoStep } from './CreateBookWizard/BasicInfoStep'
 import { WorldSettingsStep } from './CreateBookWizard/WorldSettingsStep'
 import { CharactersStep } from './CreateBookWizard/CharactersStep'
 import { ItemsStep } from './CreateBookWizard/ItemsStep'
 import { ToneStyleStep } from './CreateBookWizard/ToneStyleStep'
 import { StructureStep } from './CreateBookWizard/StructureStep'
-import { BookSettingsService } from '../services/bookSettingsService'
-import { BookItemsService } from '../services/bookItemsService'
-import { BookToneStyleService } from '../services/bookToneStyleService'
-import { BookService } from '../services/bookService'
+import { useBooksMutations } from '@/hooks/mutations/useBooksMutations'
+import { useBookSettingsMutations } from '@/hooks/mutations/useBookSettingsMutations'
+import { useBookItemsMutations } from '@/hooks/mutations/useBookItemsMutations'
+import { useBookToneStyleMutations } from '@/hooks/mutations/useBookToneStyleMutations'
 import { Save, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 
 const STEP_TITLES = [
@@ -34,7 +32,7 @@ const STEP_TITLES = [
 ]
 
 export function CreateBookWizard() {
-  const router = useRouter()
+  const navigate = useNavigate()
   const supabase = useSupabaseClient()
   const { tenantId } = useTenant()
   const { user } = useAuth()
@@ -43,6 +41,11 @@ export function CreateBookWizard() {
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [isCreatingBook, setIsCreatingBook] = useState(false)
+
+  const booksMutations = useBooksMutations()
+  const settingsMutations = useBookSettingsMutations()
+  const itemsMutations = useBookItemsMutations()
+  const toneStyleMutations = useBookToneStyleMutations()
 
   const {
     form,
@@ -89,7 +92,7 @@ export function CreateBookWizard() {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('generate-book-blueprint', {
+      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
         body: {
           title: formValues.title || 'Novo Livro',
           genre: selectedGenre || formValues.genre || 'fiction',
@@ -258,12 +261,7 @@ export function CreateBookWizard() {
     try {
       if (!user) throw new Error('Usuário não autenticado')
 
-      const bookService = new BookService(supabase)
-      const settingsService = new BookSettingsService(supabase)
-      const itemsService = new BookItemsService(supabase)
-      const toneStyleService = new BookToneStyleService(supabase)
-
-      const bookResult = await bookService.createBook(tenantId, user.id, {
+      const bookResult = await booksMutations.create.mutateAsync({
         title: formValues.title,
         genre: selectedGenre || formValues.genre || null,
         description: formValues.description || null,
@@ -275,7 +273,7 @@ export function CreateBookWizard() {
 
       await Promise.all([
         ...settings.map(setting =>
-          settingsService.createSetting({
+          settingsMutations.create.mutateAsync({
             book_id: bookId,
             name: setting.name,
             description: setting.description || null,
@@ -283,7 +281,7 @@ export function CreateBookWizard() {
           })
         ),
         ...items.map(item =>
-          itemsService.createItem({
+          itemsMutations.create.mutateAsync({
             book_id: bookId,
             name: item.name,
             function: item.function || null,
@@ -291,7 +289,7 @@ export function CreateBookWizard() {
             relevance: item.relevance || null,
           })
         ),
-        toneStyleService.createToneStyle({
+        toneStyleMutations.create.mutateAsync({
           book_id: bookId,
           narrative_tone: formValues.narrative_tone || null,
           pacing: formValues.pacing || null,
@@ -299,11 +297,14 @@ export function CreateBookWizard() {
           central_themes: formValues.central_themes || null,
         }),
         ...characters.map(character =>
-          bookService.createCharacter({
-            book_id: bookId,
-            name: character.name,
-            description: character.description || null,
-            metadata: character.role ? { role: character.role } : {},
+          booksMutations.createCharacter.mutateAsync({
+            bookId,
+            data: {
+              name: character.name,
+              description: character.description || null,
+              avatar_url: null,
+              metadata: character.role ? { role: character.role } : {},
+            }
           })
         ),
       ])
@@ -318,7 +319,7 @@ export function CreateBookWizard() {
       })
 
       setTimeout(() => {
-        router.push(`/dashboard/books/${bookId}`)
+        navigate(`/books/${bookId}`)
       }, 500)
     } catch (error: any) {
       addNotification({
