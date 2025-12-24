@@ -27,18 +27,28 @@ export default defineConfig({
 			},
 			shared: {
 				react: {
+					singleton: true,
 					requiredVersion: '^18.0.0',
+					eager: true,
 				},
 				'react-dom': {
+					singleton: true,
 					requiredVersion: '^18.0.0',
+					eager: true,
 				},
 				'react-router-dom': {
+					singleton: true,
 					requiredVersion: '^6.0.0',
 				},
 				'@tanstack/react-query': {
+					singleton: true,
 					requiredVersion: '^5.0.0',
 				},
-			},
+				zustand: {
+					singleton: true,
+					requiredVersion: '^4.0.0',
+				},
+			} as any,
 		}),
 	],
 	resolve: {

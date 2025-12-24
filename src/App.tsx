@@ -3,12 +3,10 @@ import BooksPage from "./pages/BooksPage";
 
 export default function App() {
   return (
-    <QueryProvider>
-      <AuthProvider>
-        <TenantProvider>
-          <BooksPage />
-        </TenantProvider>
-      </AuthProvider>
-    </QueryProvider>
+    <AuthProvider>
+      <TenantProvider>
+        <BooksPage />
+      </TenantProvider>
+    </AuthProvider>
   );
 }
