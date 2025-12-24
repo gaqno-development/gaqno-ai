@@ -3,7 +3,10 @@ import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
 import path from 'path'
 
-export default defineConfig({
+export default defineConfig(async () => {
+	const tailwindcss = (await import('@tailwindcss/vite')).default
+	
+	return {
 	base: '/',
 	server: {
 		port: 3002,
@@ -14,6 +17,7 @@ export default defineConfig({
 	},
 	plugins: [
 		react(),
+		tailwindcss(),
 		federation({
 			name: 'ai',
 			filename: 'remoteEntry.js',
@@ -62,4 +66,5 @@ export default defineConfig({
 		minify: false,
 		cssCodeSplit: false,
 	},
+	}
 })
