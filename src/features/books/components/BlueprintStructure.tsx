@@ -3,7 +3,6 @@ import { useBookChapters } from '../hooks/useBookChapters'
 import { useBook } from '../hooks/useBooks'
 import { useBookBlueprint } from '../hooks/useBookBlueprint'
 import { useBookCharacters } from '../hooks/useBookCharacters'
-import { useSupabaseClient } from '@/utils/supabaseClient'
 import { ChapterStatus } from '../types/books'
 import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui'
@@ -31,7 +30,6 @@ const SECTION_NAMES: Record<string, string> = {
 
 export function BlueprintStructure({ bookId, structure }: IBlueprintStructureProps) {
   const navigate = useNavigate()
-  const supabase = useSupabaseClient()
   const { chapters, createChapter, updateChapter, isCreating } = useBookChapters(bookId)
   const { book } = useBook(bookId)
   const { blueprint } = useBookBlueprint(bookId)

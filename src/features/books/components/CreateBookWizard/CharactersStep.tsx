@@ -8,7 +8,7 @@ import { Textarea } from '@gaqno-development/frontcore/components/ui'
 import { Button } from '@gaqno-development/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { User, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 import {
   Select,
@@ -47,7 +47,6 @@ export function CharactersStep({
   onCharactersChange,
   bookContext,
 }: ICharactersStepProps) {
-  const supabase = useSupabaseClient()
   const { addNotification } = useUIStore()
   const [generatingFor, setGeneratingFor] = useState<string | null>(null)
   const [isGeneratingAll, setIsGeneratingAll] = useState(false)
@@ -75,20 +74,16 @@ export function CharactersStep({
   const handleGenerateCharacterDetails = async (characterId: string, characterName: string): Promise<string> => {
     setGeneratingFor(characterId)
     try {
-      const { data, error } = await supabase.functions.invoke<any>('analyze-character', {
-        body: {
-          name: characterName,
-          description: characters.find(c => c.id === characterId)?.description || undefined,
-          bookContext: {
-            title: bookContext?.title || 'Novo Livro',
-            genre: bookContext?.genre || undefined,
-            style: undefined,
-            summary: bookContext?.description || undefined,
-          },
+      const data = await booksApi.analyzeCharacter({
+        characterName,
+        characterDescription: characters.find(c => c.id === characterId)?.description || undefined,
+        bookContext: {
+          title: bookContext?.title || 'Novo Livro',
+          genre: bookContext?.genre || undefined,
+          style: undefined,
+          summary: bookContext?.description || undefined,
         },
       })
-
-      if (error) throw error
 
       if (data?.characterDetails) {
         const details = data.characterDetails
@@ -122,15 +117,11 @@ export function CharactersStep({
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere um elenco inicial de 3 a 5 personagens principais. Para cada personagem, forneça: nome, papel na história (protagonista, antagonista, coadjuvante, secundário), descrição física, personalidade, motivações e arco narrativo inicial.`
 
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       const blueprint = data?.blueprint || data
       const charactersData = blueprint?.characters || []

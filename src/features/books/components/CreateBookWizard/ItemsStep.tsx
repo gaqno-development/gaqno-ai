@@ -8,7 +8,7 @@ import { Textarea } from '@gaqno-development/frontcore/components/ui'
 import { Button } from '@gaqno-development/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { Package, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 
 interface IItem {
@@ -34,7 +34,6 @@ export function ItemsStep({
   onItemsChange,
   bookContext,
 }: IItemsStepProps) {
-  const supabase = useSupabaseClient()
   const { addNotification } = useUIStore()
   const [generatingFor, setGeneratingFor] = useState<string | null>(null)
   const [isGeneratingAll, setIsGeneratingAll] = useState(false)
@@ -69,15 +68,11 @@ export function ItemsStep({
         relevance: `Explique a relevância do objeto "${itemName}" para a história do livro "${bookContext?.title || 'Novo Livro'}"`,
       }
 
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompts[field],
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompts[field],
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || `Detalhes sobre ${field} do objeto ${itemName}`
       return typeof generated === 'string' ? generated : JSON.stringify(generated)
@@ -103,15 +98,11 @@ export function ItemsStep({
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere 2 a 4 itens, objetos ou artefatos importantes para a história. Para cada item, forneça: nome, função narrativa, origem e relevância para a história.`
 
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       const blueprint = data?.blueprint || data
       const context = blueprint?.context || {}

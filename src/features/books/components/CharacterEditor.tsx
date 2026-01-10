@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@gaqno-development/fro
 import { useBookCharacters } from '../hooks/useBookCharacters'
 import { useBook } from '../hooks/useBooks'
 import { useBookBlueprint } from '../hooks/useBookBlueprint'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useAuth } from '@gaqno-development/frontcore/contexts'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 import { IBookCharacter } from '../types/books'
@@ -32,7 +32,6 @@ interface ICharacterEditorProps {
 }
 
 export function CharacterEditor({ bookId, characterId }: ICharacterEditorProps) {
-  const supabase = useSupabaseClient()
   const { user } = useAuth()
   const { characters, updateCharacter, isLoading } = useBookCharacters(bookId)
   const { book } = useBook(bookId)
@@ -77,21 +76,16 @@ export function CharacterEditor({ bookId, characterId }: ICharacterEditorProps) 
         throw new Error('Você precisa estar autenticado')
       }
 
-      const { data, error } = await supabase.functions.invoke<{ characterDetails?: ICharacterDetails }>('analyze-character', {
-        body: {
-          name,
-          description: description || undefined,
-          bookContext: {
-            title: book?.title || '',
-            genre: book?.genre || undefined,
-            style: book?.style || undefined,
-            summary: blueprint?.summary || book?.description || undefined,
-          },
-          existingDetails: characterDetails,
+      const data = await booksApi.analyzeCharacter({
+        characterName: name,
+        characterDescription: description || undefined,
+        bookContext: {
+          title: book?.title || '',
+          genre: book?.genre || undefined,
+          style: book?.style || undefined,
+          summary: blueprint?.summary || book?.description || undefined,
         },
       })
-
-      if (error) throw error
 
       if (data?.characterDetails) {
         setCharacterDetails(data.characterDetails)
@@ -131,25 +125,10 @@ export function CharacterEditor({ bookId, characterId }: ICharacterEditorProps) 
         throw new Error('Você precisa estar autenticado')
       }
 
-      const { data, error } = await supabase.functions.invoke<{ imageUrl?: string; avatarPrompt?: string }>('generate-character-avatar', {
-        body: {
-          character: {
-            name,
-            description: description || undefined,
-            metadata: {
-              characterDetails,
-            },
-          },
-          bookContext: {
-            title: book?.title || undefined,
-            genre: book?.genre || undefined,
-            style: book?.style || undefined,
-          },
-          generateImage: true,
-        },
+      const data = await booksApi.generateCharacterAvatar({
+        characterName: name,
+        characterDescription: description || characterDetails?.description || undefined,
       })
-
-      if (error) throw error
 
       if (data?.imageUrl) {
         setAvatarUrl(data.imageUrl)

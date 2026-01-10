@@ -7,7 +7,7 @@ import { Textarea } from '@gaqno-development/frontcore/components/ui'
 import { Button } from '@gaqno-development/frontcore/components/ui'
 import { GenreSelector } from '../GenreSelector'
 import { AISuggestionButton } from '../AISuggestionButton'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useState } from 'react'
 import { Sparkles, Loader2 } from 'lucide-react'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
@@ -19,7 +19,6 @@ interface IBasicInfoStepProps {
 }
 
 export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateCompleteBlueprint }: IBasicInfoStepProps) {
-  const supabase = useSupabaseClient()
   const { addNotification } = useUIStore()
   const { register, setValue, watch, formState: { errors } } = useFormContext()
   const [isGeneratingTitle, setIsGeneratingTitle] = useState(false)
@@ -58,15 +57,11 @@ export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateComplete
         prompt += `. A premissa do livro é: ${premise.substring(0, 300)}`
       }
       
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: prompt,
-          genre: genre || 'fiction',
-          description: premise || 'Uma história envolvente',
-        },
+      const data = await booksApi.generateBlueprint({
+        title: prompt,
+        genre: genre || 'fiction',
+        description: premise || 'Uma história envolvente',
       })
-
-      if (error) throw error
 
       const generatedTitle = data?.blueprint?.title || data?.title || 'Título Sugerido'
       return typeof generatedTitle === 'string' ? generatedTitle : JSON.stringify(generatedTitle)
@@ -108,15 +103,11 @@ export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateComplete
       
       prompt += '. A premissa deve incluir os elementos principais da história, personagens principais e o conflito central.'
       
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookTitle || 'Novo Livro',
-          genre: genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookTitle || 'Novo Livro',
+        genre: genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       const generatedPremise = data?.blueprint?.summary || data?.summary || description || 'Uma premissa interessante para o livro'
       return typeof generatedPremise === 'string' ? generatedPremise : JSON.stringify(generatedPremise)
@@ -141,15 +132,11 @@ export function BasicInfoStep({ onGenreSelect, selectedGenre, onGenerateComplete
         })
       } else {
         // Fallback: gerar apenas informações básicas
-        const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-          body: {
-            title: 'Gere um livro completo com título, gênero e premissa envolvente',
-            genre: 'fiction',
-            description: 'Crie uma ideia original e criativa para um livro, incluindo título atraente, gênero apropriado e uma premissa detalhada.',
-          },
+        const data = await booksApi.generateBlueprint({
+          title: 'Gere um livro completo com título, gênero e premissa envolvente',
+          genre: 'fiction',
+          description: 'Crie uma ideia original e criativa para um livro, incluindo título atraente, gênero apropriado e uma premissa detalhada.',
         })
-
-        if (error) throw error
 
         const blueprint = data?.blueprint || data
         

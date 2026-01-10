@@ -9,7 +9,7 @@ import { useCreateBookWizard } from '../hooks/useCreateBookWizard'
 import { BookStatus } from '../types/books'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 import { useTenant, useAuth } from '@gaqno-development/frontcore/contexts'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { BasicInfoStep } from './CreateBookWizard/BasicInfoStep'
 import { WorldSettingsStep } from './CreateBookWizard/WorldSettingsStep'
 import { CharactersStep } from './CreateBookWizard/CharactersStep'
@@ -33,7 +33,6 @@ const STEP_TITLES = [
 
 export function CreateBookWizard() {
   const navigate = useNavigate()
-  const supabase = useSupabaseClient()
   const { tenantId } = useTenant()
   const { user } = useAuth()
   const { createBook, isCreating } = useBooks()
@@ -92,15 +91,11 @@ export function CreateBookWizard() {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: formValues.title || 'Novo Livro',
-          genre: selectedGenre || formValues.genre || 'fiction',
-          description: formValues.description || 'Uma história envolvente',
-        },
+      const data = await booksApi.generateBlueprint({
+        title: formValues.title || 'Novo Livro',
+        genre: selectedGenre || formValues.genre || 'fiction',
+        description: formValues.description || 'Uma história envolvente',
       })
-
-      if (error) throw error
 
       const blueprint = data?.blueprint || data
       const context = blueprint?.context || {}

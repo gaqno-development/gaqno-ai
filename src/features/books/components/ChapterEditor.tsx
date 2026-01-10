@@ -9,7 +9,7 @@ import { useBookChapters } from '../hooks/useBookChapters'
 import { useBook } from '../hooks/useBooks'
 import { useBookBlueprint } from '../hooks/useBookBlueprint'
 import { useBookCharacters } from '../hooks/useBookCharacters'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useAuth } from '@gaqno-development/frontcore/contexts'
 import { calculatePages, formatPageInfo } from '../utils/pageCalculator'
 import { Save, Wand2, Loader2, Sparkles } from 'lucide-react'
@@ -21,7 +21,6 @@ interface IChapterEditorProps {
 }
 
 export function ChapterEditor({ bookId, chapterId }: IChapterEditorProps) {
-  const supabase = useSupabaseClient()
   const { user } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -211,15 +210,14 @@ export function ChapterEditor({ bookId, chapterId }: IChapterEditorProps) {
 
         console.log('Calling analyze-context with:', analyzeRequestBody)
 
-        const { data: analyzeData, error: analyzeError } = await supabase.functions.invoke<{ analysis: string }>('analyze-context', {
-          body: analyzeRequestBody,
-        })
-
-        if (analyzeError) {
+        try {
+          const analyzeData = await booksApi.analyzeContext(analyzeRequestBody)
+          if (analyzeData?.analysis) {
+            contextualAnalysis = analyzeData.analysis
+            console.log('Received contextual analysis:', contextualAnalysis)
+          }
+        } catch (analyzeError) {
           console.warn('Failed to get contextual analysis, proceeding without it:', analyzeError)
-        } else if (analyzeData?.analysis) {
-          contextualAnalysis = analyzeData.analysis
-          console.log('Received contextual analysis:', contextualAnalysis)
         }
       }
 
@@ -256,24 +254,9 @@ export function ChapterEditor({ bookId, chapterId }: IChapterEditorProps) {
       console.log('Calling generate-chapter with:', requestBody)
       console.log('Min words per chapter:', minWordsPerChapter)
 
-      const { data, error } = await supabase.functions.invoke<{ 
-        content?: string; 
-        title?: string;
-        summary?: string;
-        wordCount?: number; 
-        expanded?: boolean; 
-        expansionAttempts?: number;
-        error?: string | { message: string };
-        mock?: {
-          content?: string;
-          title?: string;
-          summary?: string;
-        };
-      }>('generate-chapter', {
-        body: requestBody,
-      })
+      const data = await booksApi.generateChapter(requestBody)
 
-      console.log('Response:', { data, error })
+      console.log('Response:', { data })
       console.log('Word count info:', { 
         wordCount: data?.wordCount, 
         expanded: data?.expanded, 
@@ -288,15 +271,8 @@ export function ChapterEditor({ bookId, chapterId }: IChapterEditorProps) {
         }
       }
 
-      if (error) {
-        console.error('Supabase function error details:', {
-          message: error.message,
-          status: error.status,
-        })
-        
-        if (error.message?.includes('Failed to send')) {
-          throw new Error('A função Edge Function não está disponível. Verifique se ela foi deployada corretamente.')
-        }
+      if (!data) {
+        throw new Error('Erro ao gerar capítulo. Nenhuma resposta recebida.')
         
         if (error.message?.includes('non-2xx')) {
           if (data?.error) {

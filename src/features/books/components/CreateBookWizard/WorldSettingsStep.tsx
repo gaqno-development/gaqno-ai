@@ -8,7 +8,7 @@ import { Textarea } from '@gaqno-development/frontcore/components/ui'
 import { Button } from '@gaqno-development/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { MapPin, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 
 interface ISetting {
@@ -33,7 +33,6 @@ export function WorldSettingsStep({
   onSettingsChange,
   bookContext,
 }: IWorldSettingsStepProps) {
-  const supabase = useSupabaseClient()
   const { addNotification } = useUIStore()
   const [generatingFor, setGeneratingFor] = useState<string | null>(null)
   const [isGeneratingAll, setIsGeneratingAll] = useState(false)
@@ -62,15 +61,11 @@ export function WorldSettingsStep({
     try {
       const prompt = `Crie uma descrição detalhada para o cenário "${settingName}" no livro "${bookContext?.title || 'Novo Livro'}" do gênero ${bookContext?.genre || 'ficção'}. A descrição deve incluir características físicas, atmosfera, importância na história.`
       
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || `Uma descrição detalhada do cenário ${settingName}`
       return typeof generated === 'string' ? generated : JSON.stringify(generated)
@@ -96,15 +91,11 @@ export function WorldSettingsStep({
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere 3 a 5 cenários principais onde a história se desenrola. Para cada cenário, forneça: nome, descrição detalhada (características físicas, atmosfera, importância na história) e opcionalmente uma linha do tempo ou contexto histórico.`
 
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       // Tentar extrair cenários do blueprint
       const blueprint = data?.blueprint || data

@@ -6,7 +6,7 @@ import { Label } from '@gaqno-development/frontcore/components/ui'
 import { Textarea } from '@gaqno-development/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { Button } from '@gaqno-development/frontcore/components/ui'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 import { useState } from 'react'
 import { Sparkles, Loader2 } from 'lucide-react'
@@ -28,7 +28,6 @@ const PACING_OPTIONS = [
 ]
 
 export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
-  const supabase = useSupabaseClient()
   const { addNotification } = useUIStore()
   const { register, setValue, watch } = useFormContext()
   const [generatingFor, setGeneratingFor] = useState<string | null>(null)
@@ -42,15 +41,11 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGenerateTone = async (): Promise<string> => {
     setGeneratingFor('tone')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: `Sugira um tom narrativo apropriado para: ${bookContext?.description || 'um livro'}`,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: `Sugira um tom narrativo apropriado para: ${bookContext?.description || 'um livro'}`,
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || 'equilibrado'
       const tone = typeof generated === 'string' ? generated.substring(0, 50) : 'equilibrado'
@@ -65,15 +60,11 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGeneratePacing = async (): Promise<string> => {
     setGeneratingFor('pacing')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: `Sugira um ritmo narrativo apropriado para: ${bookContext?.description || 'um livro'}`,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: `Sugira um ritmo narrativo apropriado para: ${bookContext?.description || 'um livro'}`,
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || 'equilibrado'
       const pacing = typeof generated === 'string' ? generated.substring(0, 50) : 'equilibrado'
@@ -88,15 +79,11 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGenerateAudience = async (): Promise<string> => {
     setGeneratingFor('audience')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: `Sugira um público-alvo para: ${bookContext?.description || 'um livro'}`,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: `Sugira um público-alvo para: ${bookContext?.description || 'um livro'}`,
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || 'Adultos jovens e adultos'
       return typeof generated === 'string' ? generated.substring(0, 100) : 'Adultos jovens e adultos'
@@ -110,15 +97,11 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
   const handleGenerateThemes = async (): Promise<string> => {
     setGeneratingFor('themes')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: `Sugira temas centrais e mensagens para: ${bookContext?.description || 'um livro'}`,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: `Sugira temas centrais e mensagens para: ${bookContext?.description || 'um livro'}`,
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || 'Temas universais de crescimento e descoberta'
       return typeof generated === 'string' ? generated : JSON.stringify(generated)
@@ -144,15 +127,11 @@ export function ToneStyleStep({ bookContext }: IToneStyleStepProps) {
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere uma análise completa de tom e estilo narrativo incluindo: tom narrativo (leve, sombrio, épico, etc.), ritmo (rápido, contemplativo, equilibrado, etc.), público-alvo apropriado e temas centrais/mensagens que o livro explora.`
 
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       const blueprint = data?.blueprint || data
       const summary = blueprint?.summary || data?.summary || ''

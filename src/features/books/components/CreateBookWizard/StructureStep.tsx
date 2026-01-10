@@ -8,7 +8,7 @@ import { Button } from '@gaqno-development/frontcore/components/ui'
 import { AISuggestionButton } from '../AISuggestionButton'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-development/frontcore/components/ui'
 import { ChevronDown, ChevronRight, Sparkles, Loader2 } from 'lucide-react'
-import { useSupabaseClient } from '@/utils/supabaseClient'
+import { booksApi } from '@/utils/booksApi'
 import { useUIStore } from '@gaqno-development/frontcore/store/uiStore'
 
 interface IStructureStepProps {
@@ -25,7 +25,6 @@ interface IStructureStepProps {
 }
 
 export function StructureStep({ bookContext, onStructureChange }: IStructureStepProps) {
-  const supabase = useSupabaseClient()
   const { addNotification } = useUIStore()
   const [isOpen, setIsOpen] = useState(false)
   const [plotSummary, setPlotSummary] = useState('')
@@ -45,15 +44,11 @@ export function StructureStep({ bookContext, onStructureChange }: IStructureStep
   const handleGeneratePlotSummary = async (): Promise<string> => {
     setGeneratingFor('plot')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: bookContext?.description || 'Um livro interessante',
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: bookContext?.description || 'Um livro interessante',
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || 'Um resumo do enredo em 3 atos'
       const summary = typeof generated === 'string' ? generated : JSON.stringify(generated)
@@ -70,15 +65,11 @@ export function StructureStep({ bookContext, onStructureChange }: IStructureStep
   const handleGenerateChapters = async (): Promise<string> => {
     setGeneratingFor('chapters')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: bookContext?.description || 'Um livro interessante',
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: bookContext?.description || 'Um livro interessante',
       })
-
-      if (error) throw error
 
       const structure = data?.blueprint?.structure
       if (structure?.chapters) {
@@ -104,15 +95,11 @@ export function StructureStep({ bookContext, onStructureChange }: IStructureStep
   const handleGenerateConflict = async (): Promise<string> => {
     setGeneratingFor('conflict')
     try {
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: `Descreva o conflito principal para: ${bookContext?.description || 'um livro'}`,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: `Descreva o conflito principal para: ${bookContext?.description || 'um livro'}`,
       })
-
-      if (error) throw error
 
       const generated = data?.blueprint?.summary || data?.summary || 'O conflito principal da história'
       const conflict = typeof generated === 'string' ? generated : JSON.stringify(generated)
@@ -141,15 +128,11 @@ export function StructureStep({ bookContext, onStructureChange }: IStructureStep
     try {
       const prompt = `Baseado no livro "${bookContext?.title || 'Novo Livro'}" ${bookContext?.genre ? `do gênero ${bookContext.genre}` : ''}, ${bookContext?.description ? `com a premissa: ${bookContext.description.substring(0, 200)}` : ''}. Gere uma estrutura completa da história incluindo: resumo do enredo em 3 atos (introdução, desenvolvimento, conclusão), lista de capítulos iniciais sugeridos com títulos e resumos, e o conflito principal que impulsiona a narrativa.`
 
-      const { data, error } = await supabase.functions.invoke<any>('generate-book-blueprint', {
-        body: {
-          title: bookContext?.title || 'Novo Livro',
-          genre: bookContext?.genre || 'fiction',
-          description: prompt,
-        },
+      const data = await booksApi.generateBlueprint({
+        title: bookContext?.title || 'Novo Livro',
+        genre: bookContext?.genre || 'fiction',
+        description: prompt,
       })
-
-      if (error) throw error
 
       const blueprint = data?.blueprint || data
       const structure = blueprint?.structure || {}
