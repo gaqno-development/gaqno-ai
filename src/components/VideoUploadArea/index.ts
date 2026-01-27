@@ -1,0 +1,1 @@
+export { VideoUploadArea } from './VideoUploadArea';

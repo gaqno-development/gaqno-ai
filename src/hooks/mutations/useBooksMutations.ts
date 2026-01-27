@@ -22,7 +22,7 @@ import type {
   IUpdateBookGlossaryInput,
   ICreateBookExportInput,
   IUpdateBookExportInput,
-} from '@/features/books/types/books';
+} from '@/types/books/books';
 
 const aiClient = coreAxiosClient.ai;
 

@@ -15,6 +15,11 @@ export default defineConfig(async () => {
 			allow: ['.', '../shared'],
 		},
 	},
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, './src'),
+		},
+	},
 	plugins: [
 		react(),
 		tailwindcss(),
@@ -23,11 +28,6 @@ export default defineConfig(async () => {
 			filename: 'remoteEntry.js',
 			exposes: {
 				'./App': './src/App.tsx',
-				'./BooksPage': './src/pages/BooksPage.tsx',
-				'./BookDetailPage': './src/pages/BookDetailPage.tsx',
-				'./BookChaptersPage': './src/pages/BookChaptersPage.tsx',
-				'./BookCoverPage': './src/pages/BookCoverPage.tsx',
-				'./BookExportPage': './src/pages/BookExportPage.tsx',
 			},
 			shared: {
 				react: {
@@ -55,16 +55,20 @@ export default defineConfig(async () => {
 			} as any,
 		}),
 	],
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src'),
-		},
-	},
 	build: {
 		modulePreload: false,
 		target: 'esnext',
 		minify: false,
 		cssCodeSplit: false,
+		rollupOptions: {
+			external: [],
+			output: {
+				assetFileNames: 'assets/[name].[ext]',
+			},
+		},
+	},
+	optimizeDeps: {
+		include: ['@gaqno-development/frontcore/styles/globals.css'],
 	},
 	}
 })

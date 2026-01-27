@@ -1,4 +1,4 @@
-import { IBook, IBookChapter, IBookCharacter, IBookCover, IBookExport, IBookGlossary, IBookBlueprint, IBookHistory } from '@/features/books/types/books'
+import { IBook, IBookChapter, IBookCharacter, IBookCover, IBookExport, IBookGlossary, IBookBlueprint, IBookHistory } from '@/types/books/books'
 
 function toSnakeCase(str: string): string {
   return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)

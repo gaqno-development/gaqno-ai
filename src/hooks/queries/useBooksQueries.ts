@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTenant, useAuth } from '@gaqno-development/frontcore/contexts';
 import { coreAxiosClient } from '@gaqno-development/frontcore/utils/api';
 import { transformers } from '@/lib/api-transformers';
-import type { IBook, IBookBlueprint, IBookCover, IBookHistory, IBookCharacter, IBookGlossary, IBookExport } from '@/features/books/types/books';
+import type { IBook, IBookBlueprint, IBookCover, IBookHistory, IBookCharacter, IBookGlossary, IBookExport } from '@/types/books/books';
 
 const aiClient = coreAxiosClient.ai;
 

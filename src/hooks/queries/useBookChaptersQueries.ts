@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { coreAxiosClient } from '@gaqno-development/frontcore/utils/api';
 import { transformers } from '@/lib/api-transformers';
-import type { IBookChapter } from '@/features/books/types/books';
+import type { IBookChapter } from '@/types/books/books';
 
 const aiClient = coreAxiosClient.ai;
 
