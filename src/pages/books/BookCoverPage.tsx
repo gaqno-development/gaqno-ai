@@ -1,5 +1,4 @@
 import { CoverDesigner } from '@/components/CoverDesigner'
-import { BookNavigationHeader } from '@/components/BookNavigationHeader'
 import { useBook } from '@/hooks/books/useBooks'
 import { LoadingSkeleton } from '@gaqno-development/frontcore/components/ui'
 import { EmptyState } from '@gaqno-development/frontcore/components/ui'
@@ -28,7 +27,6 @@ export function BookCoverPage({ id }: IBookCoverPageProps) {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
-      <BookNavigationHeader bookId={id} currentTab="cover" />
       <div className="flex-1 overflow-auto p-4">
         <CoverDesigner bookId={id} />
       </div>

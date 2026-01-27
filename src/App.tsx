@@ -1,12 +1,12 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AuthProvider, QueryProvider, TenantProvider } from '@gaqno-development/frontcore'
-import { Tabs, TabsList, TabsTrigger } from '@gaqno-development/frontcore/components/ui'
 import { BookOpen, Music, Image, Video } from 'lucide-react'
+import { AIPageLayout } from './layouts/AIPageLayout'
 import BookPage from './pages/BookPage'
-import AudioPage from './pages/AudioPage'
-import ImagesPage from './pages/ImagesPage'
-import VideoPage from './pages/VideoPage'
+import AudioSection from './pages/AudioSection'
+import ImagesSection from './pages/ImagesSection'
+import VideoSection from './pages/VideoSection'
 
 const AI_TABS = [
   { id: 'books', label: 'Books', icon: BookOpen },
@@ -17,16 +17,17 @@ const AI_TABS = [
 
 const VIEW_ROUTES: Record<string, string> = {
   books: '/ai/books',
-  audio: '/ai/audio',
-  images: '/ai/images',
-  video: '/ai/video',
+  audio: '/ai/audio/tts',
+  images: '/ai/images/text',
+  video: '/ai/video/modify',
 }
 
-const PATHNAME_VIEW_MAP: Record<string, string> = {
-  '/ai/books': 'books',
-  '/ai/audio': 'audio',
-  '/ai/images': 'images',
-  '/ai/video': 'video',
+function viewFromPathname(pathname: string): string | null {
+  if (pathname.startsWith('/ai/books')) return 'books'
+  if (pathname.startsWith('/ai/audio')) return 'audio'
+  if (pathname.startsWith('/ai/images')) return 'images'
+  if (pathname.startsWith('/ai/video')) return 'video'
+  return null
 }
 
 function AIPage() {
@@ -34,8 +35,7 @@ function AIPage() {
   const navigate = useNavigate()
   const pathname = location.pathname
 
-  const viewFromPath = PATHNAME_VIEW_MAP[pathname] ?? (pathname.startsWith('/ai/books') ? 'books' : null)
-  const currentView = viewFromPath ?? 'books'
+  const currentView = viewFromPathname(pathname) ?? 'books'
 
   React.useEffect(() => {
     if (pathname === '/ai' || pathname === '/ai/') {
@@ -50,9 +50,9 @@ function AIPage() {
 
   const renderView = () => {
     if (pathname.startsWith('/ai/books')) return <BookPage />
-    if (pathname === '/ai/audio') return <AudioPage />
-    if (pathname === '/ai/images') return <ImagesPage />
-    if (pathname === '/ai/video') return <VideoPage />
+    if (pathname.startsWith('/ai/audio')) return <AudioSection />
+    if (pathname.startsWith('/ai/images')) return <ImagesSection />
+    if (pathname.startsWith('/ai/video')) return <VideoSection />
     if (pathname === '/ai' || pathname === '/ai/') return null
     return <BookPage />
   }
@@ -62,29 +62,14 @@ function AIPage() {
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="border-b bg-background sticky top-0 z-10">
-        <div className="px-6 py-4">
-          <h1 className="text-2xl font-bold mb-4">AI</h1>
-          <Tabs value={currentView} onValueChange={handleTabChange}>
-            <TabsList>
-              {AI_TABS.map((tab) => {
-                const Icon = tab.icon
-                return (
-                  <TabsTrigger key={tab.id} value={tab.id}>
-                    {Icon && <Icon className="h-4 w-4 mr-2" />}
-                    {tab.label}
-                  </TabsTrigger>
-                )
-              })}
-            </TabsList>
-          </Tabs>
-        </div>
-      </div>
-      <div className="flex-1 overflow-auto p-6">
-        {renderView()}
-      </div>
-    </div>
+    <AIPageLayout
+      tabs={AI_TABS}
+      activeTab={currentView}
+      onTabChange={handleTabChange}
+      title="AI"
+    >
+      {renderView()}
+    </AIPageLayout>
   )
 }
 

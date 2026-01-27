@@ -32,4 +32,19 @@ export const imagesApi = {
 
     return await response.json();
   },
+
+  async editImage(file: File, instruction: string): Promise<{ imageUrl: string }> {
+    const form = new FormData();
+    form.append('image', file);
+    form.append('instruction', instruction);
+    const response = await fetch(`${getApiBaseUrl()}/v1/images/edit`, {
+      method: 'POST',
+      body: form,
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: `HTTP Error ${response.status}` }));
+      throw new Error(error.message || `HTTP Error ${response.status}`);
+    }
+    return await response.json();
+  },
 };

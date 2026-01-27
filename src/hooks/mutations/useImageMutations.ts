@@ -13,3 +13,13 @@ export const useImageGenerationMutations = () => {
     generate,
   };
 };
+
+export const useImageEditMutations = () => {
+  const edit = useMutation({
+    mutationFn: async ({ file, instruction }: { file: File; instruction: string }) => {
+      return await imagesApi.editImage(file, instruction);
+    },
+  });
+
+  return { edit };
+};

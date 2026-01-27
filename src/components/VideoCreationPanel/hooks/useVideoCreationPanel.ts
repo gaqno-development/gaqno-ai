@@ -13,8 +13,8 @@ const videoFormSchema = z.object({
 
 export type VideoFormData = z.infer<typeof videoFormSchema>;
 
-export const useVideoCreationPanel = () => {
-  const [mode, setMode] = useState<VideoMode>(VideoMode.MODIFY_VIDEO);
+export const useVideoCreationPanel = (initialMode: VideoMode = VideoMode.MODIFY_VIDEO) => {
+  const [mode, setMode] = useState<VideoMode>(initialMode);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
   const [addAudio, setAddAudio] = useState(false);
@@ -27,7 +27,7 @@ export const useVideoCreationPanel = () => {
   const { handleSubmit, setValue, watch } = useForm<VideoFormData>({
     resolver: zodResolver(videoFormSchema),
     defaultValues: {
-      mode: VideoMode.MODIFY_VIDEO,
+      mode: initialMode,
       model: '',
       prompt: '',
     },

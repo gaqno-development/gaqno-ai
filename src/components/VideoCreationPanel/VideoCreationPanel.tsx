@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useVideoCreationPanel } from './hooks/useVideoCreationPanel';
 import type { VideoCreationPanelProps } from './types';
 
-export const VideoCreationPanel: React.FC<VideoCreationPanelProps> = ({ className }) => {
+export const VideoCreationPanel: React.FC<VideoCreationPanelProps> = ({ className, defaultMode }) => {
   const {
     mode,
     selectedModel,
@@ -33,7 +33,7 @@ export const VideoCreationPanel: React.FC<VideoCreationPanelProps> = ({ classNam
     handleRemoveVideo,
     isSubmitDisabled,
     isSubmitLoading,
-  } = useVideoCreationPanel();
+  } = useVideoCreationPanel(defaultMode);
 
   return (
     <div className={className}>

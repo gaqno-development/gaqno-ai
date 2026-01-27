@@ -1,9 +1,13 @@
+import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
+import { BookOpen, FileText, Image, Download } from 'lucide-react'
+import { SectionWithSubNav } from '@/components/SectionWithSubNav'
+import { useBook } from '@/hooks/books/useBooks'
 import { BooksListPage } from '@/pages/books/BooksListPage'
-import { BookDetailPage } from '@/pages/books/BookDetailPage'
-import { BookChaptersPage } from '@/pages/books/BookChaptersPage'
-import { BookCoverPage } from '@/pages/books/BookCoverPage'
-import { BookExportPage } from '@/pages/books/BookExportPage'
+import { BookBlueprintView } from '@/pages/books/BookBlueprintView'
+import { BookChaptersView } from '@/pages/books/BookChaptersView'
+import { BookCoverView } from '@/pages/books/BookCoverView'
+import { BookExportView } from '@/pages/books/BookExportView'
 
 function match(pathname: string, pattern: RegExp): boolean {
   return pattern.test(pathname)
@@ -14,22 +18,44 @@ function parseBookId(pathname: string): string | null {
   return m?.[1] ?? null
 }
 
+function bookModules(id: string) {
+  return [
+    { segment: 'blueprint', label: 'Blueprint', href: `/ai/books/${id}/blueprint`, icon: BookOpen },
+    { segment: 'chapters', label: 'Capítulos', href: `/ai/books/${id}/chapters`, icon: FileText },
+    { segment: 'cover', label: 'Capa', href: `/ai/books/${id}/cover`, icon: Image },
+    { segment: 'export', label: 'Exportar', href: `/ai/books/${id}/export`, icon: Download },
+  ]
+}
+
+const SEGMENT_TO_COMPONENT = {
+  blueprint: BookBlueprintView,
+  chapters: BookChaptersView,
+  cover: BookCoverView,
+  export: BookExportView,
+}
+
 export default function BookPage() {
   const { pathname } = useLocation()
-
   const isList = match(pathname, /^\/ai\/books\/?$/)
-  const isChapters = match(pathname, /^\/ai\/books\/[^/]+\/chapters\/?$/)
-  const isCover = match(pathname, /^\/ai\/books\/[^/]+\/cover\/?$/)
-  const isExport = match(pathname, /^\/ai\/books\/[^/]+\/export\/?$/)
-  const isDetail = pathname.startsWith('/ai/books/') && !isChapters && !isCover && !isExport
-
   const id = parseBookId(pathname)
+  const { book } = useBook(id ?? '')
+
+  const modules = useMemo(() => (id ? bookModules(id) : []), [id])
 
   if (isList) return <BooksListPage />
-  if (isChapters && id) return <BookChaptersPage id={id} />
-  if (isCover && id) return <BookCoverPage id={id} />
-  if (isExport && id) return <BookExportPage id={id} />
-  if (isDetail && id) return <BookDetailPage id={id} />
+
+  if (id) {
+    return (
+      <SectionWithSubNav
+        basePath={`/ai/books/${id}`}
+        defaultSegment="blueprint"
+        children={modules}
+        segmentToComponent={SEGMENT_TO_COMPONENT}
+        title={book?.title ?? 'Livro'}
+        variant="vertical"
+      />
+    )
+  }
 
   return <BooksListPage />
 }
