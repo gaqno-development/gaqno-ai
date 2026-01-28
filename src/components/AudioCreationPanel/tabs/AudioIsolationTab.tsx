@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
 import { Button, Label } from '@gaqno-development/frontcore/components/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@gaqno-development/frontcore/components/ui';
-import { Shield } from 'lucide-react';
+import { ShieldCheck } from '@gaqno-development/frontcore/components/icons';
 import { GeneratedAudioCard } from '../GeneratedAudioCard';
 import { useAudioIsolationMutations } from '@/hooks/mutations/useAudioMutations';
 
@@ -37,7 +37,7 @@ export function AudioIsolationTab() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+            <ShieldCheck className="h-5 w-5" size={20} />
             Audio Isolation
           </CardTitle>
         </CardHeader>

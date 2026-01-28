@@ -1,12 +1,14 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
-import { Button, Textarea, Label, Input } from '@gaqno-development/frontcore/components/ui';
-import { BookOpen } from 'lucide-react';
+import { Button, Textarea, Label, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@gaqno-development/frontcore/components/ui';
+import { BookIcon } from '@gaqno-development/frontcore/components/icons';
+import { useVoices } from '@/hooks/queries/useAudioQueries';
 import { GeneratedAudioCard } from '../GeneratedAudioCard';
 import { usePodcastTab } from './hooks/usePodcastTab';
 
 export function PodcastTab() {
+  const { voices, isLoading } = useVoices();
   const {
     register,
     handleSubmit,
@@ -24,7 +26,7 @@ export function PodcastTab() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
+            <BookIcon className="h-5 w-5" size={20} />
             Podcast
           </CardTitle>
         </CardHeader>
@@ -89,11 +91,29 @@ export function PodcastTab() {
             />
           </div>
           <div>
-            <Label htmlFor="podcast-voice">Voice ID (opcional)</Label>
-            <Input
-              id="podcast-voice"
-              {...register('voiceId')}
-              placeholder="ex.: JBFqnCBsd6RMkjVDRZzb"
+            <Label htmlFor="podcast-voice">Voz (opcional)</Label>
+            <Controller
+              name="voiceId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value === '' || field.value == null ? '__default__' : field.value}
+                  onValueChange={(val) => field.onChange(val === '__default__' ? '' : val)}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger id="podcast-voice">
+                    <SelectValue placeholder={isLoading ? 'Carregando vozes…' : 'Padrão'} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__default__">Padrão</SelectItem>
+                    {voices.map((v) => (
+                      <SelectItem key={v.voice_id} value={v.voice_id}>
+                        {v.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             />
           </div>
           {apiErrorMessage && (

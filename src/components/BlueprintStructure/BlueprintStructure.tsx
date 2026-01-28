@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-development/frontcore/components/ui';
-import { BookOpen, ChevronDown, ChevronRight, Circle, Loader2 } from 'lucide-react';
+import { BookIcon, DownChevron, RightChevron } from '@gaqno-development/frontcore/components/icons';
+import { Circle, Loader2 } from 'lucide-react';
 import { cn } from '@gaqno-development/frontcore/lib/utils';
 import { useBlueprintStructure } from './hooks/useBlueprintStructure';
 import { SECTION_NAMES, SECTION_ORDER } from './hooks/useBlueprintStructure';
@@ -43,7 +44,7 @@ export function BlueprintStructure({ bookId, structure }: BlueprintStructureProp
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {isOpen ? (
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        <DownChevron className="h-4 w-4 text-muted-foreground" size={16} />
                       ) : (
                         <ChevronRight className="h-4 w-4 text-muted-foreground" />
                       )}
@@ -112,7 +113,7 @@ export function BlueprintStructure({ bookId, structure }: BlueprintStructureProp
                               )}
                             </div>
                             {!isProcessing && (
-                              <BookOpen className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                              <BookIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" size={16} />
                             )}
                           </div>
                         </CardContent>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Textarea } from '@gaqno-development/frontcore/components/ui';
 import { Button } from '@gaqno-development/frontcore/components/ui';
-import { Lightbulb } from 'lucide-react';
+import { BulbSvg } from '@gaqno-development/frontcore/components/icons';
 import {
   Dialog,
   DialogContent,
@@ -28,7 +28,7 @@ export const PromptTextarea: React.FC<PromptTextareaProps> = ({
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
           <DialogTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8">
-              <Lightbulb className="h-4 w-4 mr-2" />
+              <BulbSvg className="h-4 w-4 mr-2" size={16} />
               Prompt Examples
             </Button>
           </DialogTrigger>

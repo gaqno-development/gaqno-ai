@@ -4,7 +4,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@gaqno-deve
 import { AISuggestionButton } from '../../AISuggestionButton'
 import { useStructureStep } from './hooks/useStructureStep'
 import type { IStructureStepProps } from './types'
-import { ChevronDown, ChevronRight, Sparkles, Loader2 } from 'lucide-react'
+import { DownChevron, RightChevron, SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { Loader2 } from 'lucide-react';
 
 export function StructureStep(props: IStructureStepProps) {
   const {
@@ -32,9 +33,9 @@ export function StructureStep(props: IStructureStepProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {isOpen ? (
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <DownChevron className="h-4 w-4 text-muted-foreground" size={16} />
                 ) : (
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  <RightChevron className="h-4 w-4 text-muted-foreground" size={16} />
                 )}
                 <CardTitle className="text-base">Estrutura Inicial da História (Opcional)</CardTitle>
               </div>
@@ -58,7 +59,7 @@ export function StructureStep(props: IStructureStepProps) {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-4 w-4" />
+                    <SparklesIcon className="h-4 w-4" size={16} />
                     Gerar Tudo com IA
                   </>
                 )}

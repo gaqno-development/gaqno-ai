@@ -2,7 +2,8 @@ import { FormProvider } from 'react-hook-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
 import { Button } from '@gaqno-development/frontcore/components/ui';
 import { Progress } from '@gaqno-development/frontcore/components/ui';
-import { Save, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ArrowNarrowLeftIcon, RightChevron } from '@gaqno-development/frontcore/components/icons';
+import { Save, Loader2 } from 'lucide-react';
 import { useCreateBookWizardPage } from './hooks/useCreateBookWizardPage';
 import { BasicInfoStep } from './BasicInfoStep';
 import { WorldSettingsStep } from './WorldSettingsStep';
@@ -108,7 +109,7 @@ export function CreateBookWizard() {
                 </Button>
                 {canGoPrevious && (
                   <Button type="button" variant="outline" onClick={previousStep}>
-                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    <ArrowNarrowLeftIcon className="h-4 w-4 mr-2" size={16} />
                     Anterior
                   </Button>
                 )}
@@ -118,7 +119,7 @@ export function CreateBookWizard() {
                 {currentStep < totalSteps ? (
                   <Button type="button" onClick={nextStep} disabled={!canGoNext}>
                     Próximo
-                    <ChevronRight className="h-4 w-4 ml-2" />
+                    <RightChevron className="h-4 w-4 ml-2" size={16} />
                   </Button>
                 ) : (
                   <Button

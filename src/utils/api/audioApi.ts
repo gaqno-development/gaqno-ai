@@ -1,5 +1,6 @@
 import { getAiServiceBaseUrl } from '@/lib/env';
 import type {
+  GetVoicesResponse,
   MusicStreamRequest,
   RealtimeSttTokenResponse,
   SoundEffectRequest,
@@ -15,6 +16,12 @@ async function handleError(response: Response): Promise<never> {
 }
 
 export const audioApi = {
+  async getVoices(): Promise<GetVoicesResponse> {
+    const response = await fetch(`${getAiServiceBaseUrl()}/audio/voices`);
+    if (!response.ok) await handleError(response);
+    return await response.json();
+  },
+
   async generateAudio(body: {
     text: string;
     voiceId?: string;

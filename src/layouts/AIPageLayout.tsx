@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@gaqno-development/frontcore/components/ui';
-import type { LucideIcon } from 'lucide-react';
+import type { IconComponent } from '@gaqno-development/frontcore/utils';
 
 export interface AIPageLayoutTab {
   id: string;
   label: string;
-  icon?: LucideIcon;
+  icon?: IconComponent;
 }
 
 export interface AIPageLayoutProps {

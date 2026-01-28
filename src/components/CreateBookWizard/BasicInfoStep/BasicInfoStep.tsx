@@ -3,7 +3,8 @@ import { GenreSelector } from '../../GenreSelector'
 import { AISuggestionButton } from '../../AISuggestionButton'
 import { useBasicInfoStep } from './hooks/useBasicInfoStep'
 import type { IBasicInfoStepProps } from './types'
-import { Sparkles, Loader2 } from 'lucide-react'
+import { SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { Loader2 } from 'lucide-react';
 
 export function BasicInfoStep(props: IBasicInfoStepProps) {
   const {
@@ -35,7 +36,7 @@ export function BasicInfoStep(props: IBasicInfoStepProps) {
             </>
           ) : (
             <>
-              <Sparkles className="h-4 w-4" />
+              <SparklesIcon className="h-4 w-4" />
               Gerar Tudo com IA
             </>
           )}

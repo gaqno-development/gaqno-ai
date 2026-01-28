@@ -1,6 +1,7 @@
 import { Textarea } from '@gaqno-development/frontcore/components/ui';
 import { Button } from '@gaqno-development/frontcore/components/ui';
-import { Save, X } from 'lucide-react';
+import { XIcon } from '@gaqno-development/frontcore/components/icons';
+import { Save } from 'lucide-react';
 import { useBlueprintCard } from './hooks/useBlueprintCard';
 import type { BlueprintCardProps } from './types';
 
@@ -33,7 +34,7 @@ export function BlueprintCard({ content, isEditing, onSave }: BlueprintCardProps
           Salvar
         </Button>
         <Button variant="outline" size="sm" onClick={handleCancel}>
-          <X className="h-4 w-4 mr-2" />
+          <XIcon className="h-4 w-4 mr-2" size={16} />
           Cancelar
         </Button>
       </div>

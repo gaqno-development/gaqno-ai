@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/fro
 import { Input } from '@gaqno-development/frontcore/components/ui';
 import { Label } from '@gaqno-development/frontcore/components/ui';
 import { Button } from '@gaqno-development/frontcore/components/ui';
-import { BookOpen, FileText, Settings, Save } from 'lucide-react';
+import { BookIcon, FileDescriptionIcon, GearIcon } from '@gaqno-development/frontcore/components/icons';
+import { Save } from 'lucide-react';
 import { CharacterList } from '../CharacterList';
 import { ConsistencyAlerts } from '../ConsistencyAlerts';
 import { useBlueprintContextPanel } from './hooks/useBlueprintContextPanel';
@@ -27,7 +28,7 @@ export function BlueprintContextPanel({ bookId }: BlueprintContextPanelProps) {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <FileText className="h-4 w-4" />
+            <FileDescriptionIcon className="h-4 w-4" size={16} />
             Estatísticas do Livro
           </CardTitle>
         </CardHeader>
@@ -43,15 +44,15 @@ export function BlueprintContextPanel({ bookId }: BlueprintContextPanelProps) {
               <div className="font-medium mb-1">Progresso</div>
               <div className="text-xs text-muted-foreground space-y-1">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="h-3 w-3" />
+                  <BookIcon className="h-3 w-3" size={12} />
                   {chapters.length} capítulos
                 </div>
                 <div className="flex items-center gap-2">
-                  <FileText className="h-3 w-3" />
+                  <FileDescriptionIcon className="h-3 w-3" size={12} />
                   {totalWords.toLocaleString()} palavras
                 </div>
                 <div className="flex items-center gap-2">
-                  <FileText className="h-3 w-3" />
+                  <FileDescriptionIcon className="h-3 w-3" size={12} />
                   {totalPages} páginas
                 </div>
               </div>
@@ -69,7 +70,7 @@ export function BlueprintContextPanel({ bookId }: BlueprintContextPanelProps) {
       <Card>
         <CardHeader>
           <CardTitle className="text-sm flex items-center gap-2">
-            <Settings className="h-4 w-4" />
+            <GearIcon className="h-4 w-4" size={16} />
             Configurações de Capítulos
           </CardTitle>
         </CardHeader>

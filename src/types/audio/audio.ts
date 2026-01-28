@@ -1,3 +1,12 @@
+export interface VoiceListItem {
+  voice_id: string;
+  name: string;
+}
+
+export interface GetVoicesResponse {
+  voices: VoiceListItem[];
+}
+
 export interface AudioGenerationRequest {
   text: string;
   voiceId?: string;

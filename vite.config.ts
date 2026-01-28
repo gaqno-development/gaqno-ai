@@ -19,6 +19,7 @@ export default defineConfig(async () => {
 		alias: {
 			'@': path.resolve(__dirname, './src'),
 		},
+		dedupe: ['motion'],
 	},
 	plugins: [
 		react(),
@@ -52,6 +53,10 @@ export default defineConfig(async () => {
 					singleton: true,
 					requiredVersion: '^4.0.0',
 				},
+				'use-sync-external-store': {
+					singleton: true,
+					requiredVersion: '*',
+				},
 			} as any,
 		}),
 	],
@@ -60,15 +65,20 @@ export default defineConfig(async () => {
 		target: 'esnext',
 		minify: false,
 		cssCodeSplit: false,
+		commonjsOptions: {
+			transformMixedEsModules: true,
+			requireReturnsDefault: 'preferred',
+		},
 		rollupOptions: {
 			external: [],
 			output: {
+				format: 'es',
 				assetFileNames: 'assets/[name].[ext]',
 			},
 		},
 	},
 	optimizeDeps: {
-		include: ['@gaqno-development/frontcore/styles/globals.css'],
+		include: ['@gaqno-development/frontcore/styles/globals.css', 'motion', 'use-sync-external-store'],
 	},
 	}
 })

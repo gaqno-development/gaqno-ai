@@ -3,7 +3,8 @@ import { Input, Label, Textarea, Button } from '@gaqno-development/frontcore/com
 import { AISuggestionButton } from '../../AISuggestionButton'
 import { useItemsStep } from './hooks/useItemsStep'
 import type { IItemsStepProps } from './types'
-import { Package, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
+import { TrashIcon, SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { Package, Plus, Loader2 } from 'lucide-react';
 
 export function ItemsStep(props: IItemsStepProps) {
   const {
@@ -80,7 +81,7 @@ export function ItemsStep(props: IItemsStepProps) {
                     </div>
                   </div>
                   <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveItem(item.id)}>
-                    <Trash2 className="h-4 w-4" />
+                    <TrashIcon className="h-4 w-4" />
                   </Button>
                 </div>
               </CardHeader>

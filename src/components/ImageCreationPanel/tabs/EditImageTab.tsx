@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
 import { Button, Textarea, Label } from '@gaqno-development/frontcore/components/ui';
-import { Pencil } from 'lucide-react';
+import { PenIcon } from '@gaqno-development/frontcore/components/icons';
 import { useEditImageTab } from './hooks/useEditImageTab';
 
 export function EditImageTab() {
@@ -25,7 +25,7 @@ export function EditImageTab() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Pencil className="h-5 w-5" />
+            <PenIcon className="h-5 w-5" size={20} />
             Editar Imagem
           </CardTitle>
         </CardHeader>

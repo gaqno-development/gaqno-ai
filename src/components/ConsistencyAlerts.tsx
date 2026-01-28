@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui'
 import { Alert, AlertDescription } from '@gaqno-development/frontcore/components/ui'
-import { AlertTriangle } from 'lucide-react'
+import { TriangleAlertIcon } from '@gaqno-development/frontcore/components/icons';
 
 interface IConsistencyAlertsProps {
   bookId: string
@@ -17,7 +17,7 @@ export function ConsistencyAlerts({ bookId }: IConsistencyAlertsProps) {
       <CardContent>
         <div className="space-y-2">
           <Alert>
-            <AlertTriangle className="h-4 w-4" />
+            <TriangleAlertIcon className="h-4 w-4" size={16} />
             <AlertDescription className="text-xs">
               Nenhum problema de consistência detectado
             </AlertDescription>

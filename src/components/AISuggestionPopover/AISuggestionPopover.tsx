@@ -1,6 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@gaqno-development/frontcore/components/ui';
 import { Button } from '@gaqno-development/frontcore/components/ui';
-import { Loader2, Sparkles, Check, X, RefreshCw } from 'lucide-react';
+import { SparklesIcon, CheckedIcon, XIcon, RefreshIcon } from '@gaqno-development/frontcore/components/icons';
+import { Loader2 } from 'lucide-react';
 import { useAISuggestionPopover } from './hooks/useAISuggestionPopover';
 import type { AISuggestionPopoverProps } from './types';
 
@@ -30,7 +31,7 @@ export function AISuggestionPopover({
       className="h-8 w-8 p-0"
       disabled={disabled}
     >
-      <Sparkles className="h-4 w-4" />
+      <SparklesIcon className="h-4 w-4" size={16} />
     </Button>
   );
 
@@ -42,7 +43,7 @@ export function AISuggestionPopover({
       <PopoverContent className="w-80" align="start">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" />
+            <SparklesIcon className="h-4 w-4 text-primary" size={16} />
             <h4 className="font-semibold text-sm">Sugestão com IA</h4>
           </div>
 
@@ -94,7 +95,7 @@ export function AISuggestionPopover({
                   size="sm"
                   className="flex-1"
                 >
-                  <Check className="h-4 w-4 mr-2" />
+                  <CheckedIcon className="h-4 w-4 mr-2" size={16} />
                   Usar
                 </Button>
                 <Button
@@ -103,7 +104,7 @@ export function AISuggestionPopover({
                   variant="outline"
                   className="flex-1"
                 >
-                  <RefreshCw className="h-4 w-4 mr-2" />
+                  <RefreshIcon className="h-4 w-4 mr-2" size={16} />
                   Gerar Outra
                 </Button>
                 <Button
@@ -111,7 +112,7 @@ export function AISuggestionPopover({
                   size="sm"
                   variant="ghost"
                 >
-                  <X className="h-4 w-4" />
+                  <XIcon className="h-4 w-4" size={16} />
                 </Button>
               </div>
             </div>

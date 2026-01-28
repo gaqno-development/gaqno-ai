@@ -4,7 +4,7 @@ import { BlueprintCard } from '../BlueprintCard';
 import { BlueprintStructure } from '../BlueprintStructure';
 import { useBlueprintContent } from './hooks/useBlueprintContent';
 import type { BlueprintContentProps } from './types';
-import { RefreshCw, Edit } from 'lucide-react';
+import { RefreshIcon, PenIcon } from '@gaqno-development/frontcore/components/icons';
 
 export function BlueprintContent({ bookId, blueprint }: BlueprintContentProps) {
   const {
@@ -53,7 +53,7 @@ export function BlueprintContent({ bookId, blueprint }: BlueprintContentProps) {
                 size="sm"
                 onClick={handleToggleEdit}
               >
-                <Edit className="h-4 w-4 mr-2" />
+                <PenIcon className="h-4 w-4 mr-2" size={16} />
                 Editar
               </Button>
               <Button
@@ -61,7 +61,7 @@ export function BlueprintContent({ bookId, blueprint }: BlueprintContentProps) {
                 size="sm"
                 disabled={isUpdating}
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
+                <RefreshIcon className="h-4 w-4 mr-2" size={16} />
                 Regenerar
               </Button>
             </div>

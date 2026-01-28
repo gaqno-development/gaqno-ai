@@ -5,7 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from '@gaqno-development/frontcore/components/ui';
 import { Label } from '@gaqno-development/frontcore/components/ui';
 import { Textarea } from '@gaqno-development/frontcore/components/ui';
-import { BookOpen, Users, Plus } from 'lucide-react';
+import { BookIcon, UsersIcon } from '@gaqno-development/frontcore/components/icons';
+import { Plus } from 'lucide-react';
 import { useBookStructureMap } from './hooks/useBookStructureMap';
 import type { BookStructureMapProps } from './types';
 
@@ -90,7 +91,7 @@ export function BookStructureMap({ bookId }: BookStructureMapProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm flex items-center gap-2">
-              <Users className="h-4 w-4" />
+              <UsersIcon className="h-4 w-4" size={16} />
               Personagens
             </CardTitle>
             <Button size="sm" variant="ghost" onClick={() => setShowCharacterDialog(true)}>

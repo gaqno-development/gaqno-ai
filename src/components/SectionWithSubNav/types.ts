@@ -1,11 +1,11 @@
-import type { LucideIcon } from 'lucide-react';
+import type { IconComponent } from '@gaqno-development/frontcore/utils';
 import type { ComponentType } from 'react';
 
 export interface ChildConfig {
   segment: string;
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: IconComponent;
 }
 
 export interface SectionWithSubNavProps {

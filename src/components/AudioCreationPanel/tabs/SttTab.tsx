@@ -5,6 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Mic, Upload } from 'lucide-react';
 import { useTranscribeMutations } from '@/hooks/mutations/useAudioMutations';
 import { useRealtimeStt } from '@/hooks/audio';
+import { startRealtimePcmCapture } from '@/utils/audio/pcmCapture';
+import { VoiceLevelBars } from './VoiceLevelBars';
 
 export function SttTab() {
   const { transcribe } = useTranscribeMutations();
@@ -14,8 +16,9 @@ export function SttTab() {
 
   const rt = useRealtimeStt();
   const [realtimeMode, setRealtimeMode] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const stopPcmCaptureRef = useRef<(() => void) | null>(null);
 
   const onFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -36,24 +39,18 @@ export function SttTab() {
   const startRealtime = async () => {
     setRealtimeMode(true);
     setResult(null);
-    await rt.connect();
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-      const recorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = recorder;
-      const sampleRate = 16000;
-      recorder.ondataavailable = (e) => {
-        if (e.data.size && rt.isConnected) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const b64 = (reader.result as string).split(',')[1];
-            if (b64) rt.sendChunk(b64, false, sampleRate);
-          };
-          reader.readAsDataURL(e.data);
-        }
-      };
-      recorder.start(250);
+      await rt.connect(() => {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+          streamRef.current = stream;
+          setMediaStream(stream);
+          stopPcmCaptureRef.current = startRealtimePcmCapture(stream, rt.sendChunk);
+        }).catch((e) => {
+          console.error(e);
+          rt.disconnect();
+          setRealtimeMode(false);
+        });
+      });
     } catch (e) {
       rt.disconnect();
       setRealtimeMode(false);
@@ -62,13 +59,17 @@ export function SttTab() {
   };
 
   const stopRealtime = () => {
-    mediaRecorderRef.current?.stop();
+    stopPcmCaptureRef.current?.();
+    stopPcmCaptureRef.current = null;
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
-    mediaRecorderRef.current = null;
-    rt.disconnect();
-    setRealtimeMode(false);
-    if (rt.committedTranscript) setResult({ text: rt.committedTranscript });
+    setMediaStream(null);
+    rt.commit();
+    setTimeout(() => {
+      rt.disconnect();
+      setRealtimeMode(false);
+      if (rt.committedTranscript) setResult({ text: rt.committedTranscript });
+    }, 1500);
   };
 
   return (
@@ -120,9 +121,17 @@ export function SttTab() {
               Start
             </Button>
           ) : (
-            <Button onClick={stopRealtime} variant="destructive" className="w-full">
-              Stop
-            </Button>
+            <>
+              <div className="flex items-center gap-4">
+                <VoiceLevelBars stream={mediaStream} className="flex-1" />
+                <Button onClick={stopRealtime} variant="destructive" size="sm">
+                  Stop
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {mediaStream ? 'Speaking…' : 'Connecting…'}
+              </p>
+            </>
           )}
           {rt.partialTranscript && <p className="text-sm text-muted-foreground">Partial: {rt.partialTranscript}</p>}
           {rt.committedTranscript && <p className="text-sm">Committed: {rt.committedTranscript}</p>}

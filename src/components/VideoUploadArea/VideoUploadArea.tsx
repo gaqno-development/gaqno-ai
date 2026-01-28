@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from '@gaqno-development/frontcore/components/ui';
-import { Upload, X, Video } from 'lucide-react';
+import { XIcon } from '@gaqno-development/frontcore/components/icons';
+import { Upload, Video } from 'lucide-react';
 import { cn } from '@gaqno-development/frontcore/lib/utils';
 import { useVideoUploadArea } from './hooks/useVideoUploadArea';
 import type { VideoUploadAreaProps } from './types';
@@ -44,7 +45,7 @@ export const VideoUploadArea: React.FC<VideoUploadAreaProps> = ({
               className="absolute top-2 right-2 p-1 rounded-full bg-background/80 hover:bg-background border shadow-sm"
               aria-label="Remove video"
             >
-              <X className="h-4 w-4" />
+              <XIcon className="h-4 w-4" size={16} />
             </button>
             <div className="mt-2 text-sm text-muted-foreground">
               {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)

@@ -2,7 +2,7 @@
 
 import { AISuggestionPopover } from './AISuggestionPopover'
 import { Button } from '@gaqno-development/frontcore/components/ui'
-import { Sparkles } from 'lucide-react'
+import { SparklesIcon } from '@gaqno-development/frontcore/components/icons';
 
 interface IAISuggestionButtonProps {
   onGenerate: () => Promise<string>
@@ -33,7 +33,7 @@ export function AISuggestionButton({
           disabled={disabled}
           aria-label="Gerar sugestão com IA"
         >
-          <Sparkles className="h-4 w-4" />
+          <SparklesIcon className="h-4 w-4" size={16} />
         </Button>
       }
     />

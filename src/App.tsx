@@ -1,7 +1,8 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AuthProvider, QueryProvider, TenantProvider } from '@gaqno-development/frontcore'
-import { BookOpen, Music, Image, Video } from 'lucide-react'
+import { BookIcon } from '@gaqno-development/frontcore/components/icons';
+import { Music, Image, Video } from 'lucide-react';
 import { AIPageLayout } from './layouts/AIPageLayout'
 import BookPage from './pages/BookPage'
 import AudioSection from './pages/AudioSection'
@@ -9,7 +10,7 @@ import ImagesSection from './pages/ImagesSection'
 import VideoSection from './pages/VideoSection'
 
 const AI_TABS = [
-  { id: 'books', label: 'Books', icon: BookOpen },
+  { id: 'books', label: 'Books', icon: BookIcon },
   { id: 'audio', label: 'Audio', icon: Music },
   { id: 'images', label: 'Images', icon: Image },
   { id: 'video', label: 'Video', icon: Video },

@@ -4,7 +4,8 @@ import { Input } from '@gaqno-development/frontcore/components/ui';
 import { Label } from '@gaqno-development/frontcore/components/ui';
 import { Button } from '@gaqno-development/frontcore/components/ui';
 import { Progress } from '@gaqno-development/frontcore/components/ui';
-import { Save, Wand2, Loader2, Sparkles } from 'lucide-react';
+import { SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { Save, Wand2, Loader2 } from 'lucide-react';
 import { useChapterEditor } from './hooks/useChapterEditor';
 import type { ChapterEditorProps } from './types';
 
@@ -94,7 +95,7 @@ export function ChapterEditor({ bookId, chapterId }: ChapterEditorProps) {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">{stepLabel}</span>
-                <Sparkles className="h-4 w-4 animate-pulse text-primary" />
+                <SparklesIcon className="h-4 w-4 animate-pulse text-primary" size={16} />
               </div>
               <Progress value={progressValue} className="h-2" />
               {generationStep === 'expanding' && currentWordCount && targetWordCount && (

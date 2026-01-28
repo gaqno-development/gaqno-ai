@@ -3,7 +3,8 @@ import { Input, Label, Textarea, Button } from '@gaqno-development/frontcore/com
 import { AISuggestionButton } from '../../AISuggestionButton'
 import { useWorldSettingsStep } from './hooks/useWorldSettingsStep'
 import type { IWorldSettingsStepProps } from './types'
-import { MapPin, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
+import { TrashIcon, SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { MapPin, Plus, Loader2 } from 'lucide-react';
 
 export function WorldSettingsStep(props: IWorldSettingsStepProps) {
   const {
@@ -80,7 +81,7 @@ export function WorldSettingsStep(props: IWorldSettingsStepProps) {
                     </div>
                   </div>
                   <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveSetting(setting.id)}>
-                    <Trash2 className="h-4 w-4" />
+                    <TrashIcon className="h-4 w-4" />
                   </Button>
                 </div>
               </CardHeader>

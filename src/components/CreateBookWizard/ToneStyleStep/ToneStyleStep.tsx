@@ -3,7 +3,8 @@ import { AISuggestionButton } from '../../AISuggestionButton'
 import { useToneStyleStep } from './hooks/useToneStyleStep'
 import type { IToneStyleStepProps } from './types'
 import { TONE_OPTIONS, PACING_OPTIONS } from './types'
-import { Sparkles, Loader2 } from 'lucide-react'
+import { SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { Loader2 } from 'lucide-react';
 
 export function ToneStyleStep(props: IToneStyleStepProps) {
   const {
@@ -35,7 +36,7 @@ export function ToneStyleStep(props: IToneStyleStepProps) {
             </>
           ) : (
             <>
-              <Sparkles className="h-4 w-4" />
+              <SparklesIcon className="h-4 w-4" />
               Gerar Tudo com IA
             </>
           )}

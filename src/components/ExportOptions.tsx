@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqn
 import { Button } from '@gaqno-development/frontcore/components/ui'
 import { useBookExports } from '@/hooks/books/useBookExport'
 import { ExportFormat, ExportStatus } from '@/types/books/books'
-import { FileText, Download } from 'lucide-react'
+import { FileDescriptionIcon } from '@gaqno-development/frontcore/components/icons';
+import { Download } from 'lucide-react';
 
 interface IExportOptionsProps {
   bookId: string
@@ -49,7 +50,7 @@ export function ExportOptions({ bookId }: IExportOptionsProps) {
           <Card key={option.format} className="cursor-pointer hover:border-primary transition-colors">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+                <FileDescriptionIcon className="h-5 w-5" size={20} />
                 {option.label}
               </CardTitle>
               <CardDescription>{option.description}</CardDescription>

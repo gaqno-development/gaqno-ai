@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { BookOpen, FileText, Image, Download } from 'lucide-react'
+import { BookIcon, FileDescriptionIcon } from '@gaqno-development/frontcore/components/icons';
+import { Image, Download } from 'lucide-react';
 import { SectionWithSubNav } from '@/components/SectionWithSubNav'
 import { useBook } from '@/hooks/books/useBooks'
 import { BooksListPage } from '@/pages/books/BooksListPage'
@@ -20,8 +21,8 @@ function parseBookId(pathname: string): string | null {
 
 function bookModules(id: string) {
   return [
-    { segment: 'blueprint', label: 'Blueprint', href: `/ai/books/${id}/blueprint`, icon: BookOpen },
-    { segment: 'chapters', label: 'Capítulos', href: `/ai/books/${id}/chapters`, icon: FileText },
+    { segment: 'blueprint', label: 'Blueprint', href: `/ai/books/${id}/blueprint`, icon: BookIcon },
+    { segment: 'chapters', label: 'Capítulos', href: `/ai/books/${id}/chapters`, icon: FileDescriptionIcon },
     { segment: 'cover', label: 'Capa', href: `/ai/books/${id}/cover`, icon: Image },
     { segment: 'export', label: 'Exportar', href: `/ai/books/${id}/export`, icon: Download },
   ]

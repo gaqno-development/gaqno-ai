@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui'
 import { CreateBookWizard } from '@/components/CreateBookWizard'
 import { useBooks } from '@/hooks/books/useBooks'
-import { BookOpen, Plus } from 'lucide-react'
+import { BookIcon } from '@gaqno-development/frontcore/components/icons';
+import { Plus } from 'lucide-react';
 import { EmptyState } from '@gaqno-development/frontcore/components/ui'
 import { LoadingSkeleton } from '@gaqno-development/frontcore/components/ui'
 
@@ -41,7 +42,7 @@ export function BooksListPage() {
         <LoadingSkeleton variant="card" count={3} />
       ) : books.length === 0 ? (
         <EmptyState
-          icon={BookOpen}
+          icon={BookIcon}
           title="Nenhum livro criado ainda"
           description="Comece sua jornada criativa criando seu primeiro livro. Você pode adicionar capítulos, personagens e muito mais."
           action={{

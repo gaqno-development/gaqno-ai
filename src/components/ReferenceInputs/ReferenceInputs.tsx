@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
-import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import { XIcon } from '@gaqno-development/frontcore/components/icons';
+import { Upload, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@gaqno-development/frontcore/lib/utils';
 import { useReferenceInputs } from './hooks/useReferenceInputs';
 import type { ReferenceInputsProps } from './types';
@@ -34,7 +35,7 @@ export const ReferenceInputs: React.FC<ReferenceInputsProps> = ({
                 className="absolute top-2 right-2 p-1 rounded-full bg-background/80 hover:bg-background border shadow-sm"
                 aria-label="Remove image"
               >
-                <X className="h-4 w-4" />
+                <XIcon className="h-4 w-4" size={16} />
               </button>
             </div>
           ) : (

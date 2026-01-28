@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui'
 import { useBook } from '@/hooks/books/useBooks'
 import { useBookActiveCover } from '@/hooks/books/useBookCover'
-import { BookOpen } from 'lucide-react'
+import { BookIcon } from '@gaqno-development/frontcore/components/icons';
 
 interface IExportPreviewProps {
   bookId: string
@@ -28,7 +28,7 @@ export function ExportPreview({ bookId }: IExportPreviewProps) {
                 className="w-full h-full object-cover rounded-lg"
               />
             ) : (
-              <BookOpen className="h-16 w-16 text-muted-foreground" />
+              <BookIcon className="h-16 w-16 text-muted-foreground" size={64} />
             )}
           </div>
           <div>

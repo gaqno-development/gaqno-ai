@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@gaqno-development/frontcore/components/ui';
-import { Paintbrush } from 'lucide-react';
+import { PaintIcon } from '@gaqno-development/frontcore/components/icons';
 
 export function InpaintingTab() {
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Paintbrush className="h-5 w-5" />
+          <PaintIcon className="h-5 w-5" size={20} />
           Inpainting
         </CardTitle>
       </CardHeader>

@@ -5,7 +5,8 @@ import { AISuggestionButton } from '../../AISuggestionButton'
 import { useCharactersStep } from './hooks/useCharactersStep'
 import type { ICharactersStepProps } from './types'
 import { CHARACTER_ROLES } from './types'
-import { User, Plus, Trash2, Sparkles, Loader2 } from 'lucide-react'
+import { UserIcon, TrashIcon, SparklesIcon } from '@gaqno-development/frontcore/components/icons';
+import { Plus, Loader2 } from 'lucide-react';
 
 export function CharactersStep(props: ICharactersStepProps) {
   const {
@@ -43,7 +44,7 @@ export function CharactersStep(props: ICharactersStepProps) {
               </>
             ) : (
               <>
-                <Sparkles className="h-4 w-4" />
+                <SparklesIcon className="h-4 w-4" />
                 Gerar Tudo com IA
               </>
             )}
@@ -58,7 +59,7 @@ export function CharactersStep(props: ICharactersStepProps) {
       {characters.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center">
-            <User className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <UserIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-sm text-muted-foreground">
               Nenhum personagem adicionado ainda. Clique em &quot;Adicionar Personagem&quot; para começar.
             </p>
@@ -72,7 +73,7 @@ export function CharactersStep(props: ICharactersStepProps) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-2">
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
+                      <UserIcon className="h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder="Nome do personagem"
                         value={character.name}

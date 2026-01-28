@@ -1,5 +1,6 @@
 import { lazy } from 'react';
-import { Video, Film, FileText } from 'lucide-react';
+import { FileDescriptionIcon } from '@gaqno-development/frontcore/components/icons';
+import { Video, Film } from 'lucide-react';
 import { SectionWithSubNav } from '@/components/SectionWithSubNav';
 
 const ModifyVideoTab = lazy(() =>
@@ -15,7 +16,7 @@ const TextToVideoTab = lazy(() =>
 const VIDEO_CHILDREN = [
   { segment: 'modify', label: 'Modificar Vídeo', href: '/ai/video/modify', icon: Video },
   { segment: 'reference', label: 'Usar Referência', href: '/ai/video/reference', icon: Film },
-  { segment: 'text', label: 'Texto para Vídeo', href: '/ai/video/text', icon: FileText },
+  { segment: 'text', label: 'Texto para Vídeo', href: '/ai/video/text', icon: FileDescriptionIcon },
 ];
 
 const SEGMENT_TO_COMPONENT = {
