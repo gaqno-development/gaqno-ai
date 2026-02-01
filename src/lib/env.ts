@@ -6,6 +6,6 @@ export function getViteEnv(key: string, defaultValue: string = ''): string {
 }
 
 export function getAiServiceBaseUrl(): string {
-  const aiServiceUrl = getViteEnv('VITE_AI_SERVICE_URL', 'https://api.gaqno.com.br/ai');
+  const aiServiceUrl = getViteEnv('VITE_SERVICE_AI_URL', 'https://api.gaqno.com.br/ai');
   return aiServiceUrl.replace(/\/$/, '');
 }

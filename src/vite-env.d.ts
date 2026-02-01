@@ -31,9 +31,8 @@ declare module '*.webp' {
 }
 
 interface ImportMetaEnv {
-  readonly VITE_SSO_SERVICE_URL?: string
-  readonly VITE_AI_SERVICE_URL?: string
-  // Add other VITE_ prefixed env vars as needed
+  readonly VITE_SERVICE_SSO_URL?: string
+  readonly VITE_SERVICE_AI_URL?: string
 }
 
 interface ImportMeta {
