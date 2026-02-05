@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useImageGeneration, useImageModels } from "@/hooks/images";
-import { useAIModelPreferences } from "@gaqno-development/frontcore/hooks";
+import { useAIModelPreferences } from "@gaqno-development/frontcore/hooks/ai";
 
 const imageFormSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
